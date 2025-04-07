@@ -9,7 +9,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             max-width: 800px;
             margin: 0 auto;
-            padding: 70px 20px 20px; /* 顶部留出导航栏空间 */
+            padding: 80px 20px 20px; /* 顶部留出更大导航栏空间 */
             line-height: 1.6;
             color: #333;
         }
@@ -84,21 +84,24 @@
         }
         /* 导航栏样式 */
         nav {
-            position: fixed; /* 固定在顶部 */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             background: #f6f8fa;
-            padding: 10px;
+            padding: 15px; /* 增加高度 */
             border-bottom: 1px solid #eaecef;
             text-align: center;
-            z-index: 1000; /* 确保在最上层 */
+            z-index: 1000;
         }
         nav a {
-            margin: 0 20px;
+            margin: 0 30px; /* 增大间距 */
             font-weight: bold;
+            font-size: 18px; /* 增大字体 */
             color: #0366d6;
             text-decoration: none;
+            padding: 5px 10px; /* 增加点击区域 */
+            line-height: 1.5; /* 优化行高 */
         }
         nav a:hover {
             color: #24292e;
@@ -147,7 +150,7 @@
         <h3>我的突破</h3>
         <ul>
             <li><strong>技术背景</strong>：大学学计算机信息安全，有网络基础，现为外卖员。</li>
-            <li><strong>创新点</strong>：绕过登录限制，单账户运行数千窗口，成本可控。</li>
+            <li><strong>创新点</strong>：Pk绕过登录限制，单账户运行数千窗口，成本可控。</li>
             <li><strong>实现方式</strong>：
                 <ol>
                     <li><strong>多设备多窗口</strong>：突破限制，开3000+窗口，平摊风险，最大化账户利用率。</li>
