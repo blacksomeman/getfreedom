@@ -1,6 +1,6 @@
 # 加密货币收益项目
 
-欢迎体验我的两个低风险、高收益项目！我是国内外卖骑手，利用技术突破实现稳定收益。以下是项目简介，详情请访问 [项目网页](https://your-username.github.io/your-repo-name/)。
+欢迎体验我的两个低风险、高收益项目！我是国内外卖骑手，利用技术突破实现稳定收益。以下是项目简介，详情请访问 [项目网页](https://blacksomeman.github.io/getfreedom/)。
 
 ## 项目概览
 
@@ -29,7 +29,7 @@
 - **资金管理**：所有支持记录公开在 [Google Doc](https://example.com)（待更新）。
 
 ## 如何参与
-1. 查看详细计划：[项目网页](https://your-username.github.io/your-repo-name/)。
+1. 查看详细计划：[项目网页](https://blacksomeman.github.io/getfreedom/)。
 2. 支持资金至以下地址：（请在此填入你的钱包文本地址）或扫描OKX二维码（见网页）。
 3. 留言地址截图，我将补充ID公示。
 
