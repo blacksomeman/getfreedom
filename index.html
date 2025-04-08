@@ -127,7 +127,7 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1001;
-            touch-action: none; /* 防止触摸干扰 */
+            touch-action: none;
         }
         #toc-menu {
             position: fixed;
@@ -139,7 +139,7 @@
             border: 1px solid #eaecef;
             border-radius: 5px;
             padding: 10px;
-            overflow-y: auto;
+            overflow-y: auto; /* 确保可滚动 */
             display: none;
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -168,7 +168,7 @@
         }
         @media (max-width: 600px) {
             #toc-menu {
-                width: 150px; /* 手机端缩小菜单 */
+                width: 150px;
             }
         }
     </style>
@@ -412,7 +412,7 @@
                 link.classList.remove('active');
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
-            updateTOC();
+            updateTOC(); // 切换项目时更新目录
         }
 
         // 生成目录
@@ -420,6 +420,7 @@
             const tocList = document.getElementById('toc-list');
             tocList.innerHTML = '';
             const activeProject = document.querySelector('.project.active');
+            if (!activeProject) return; // 防止空项目
             const headings = activeProject.querySelectorAll('h2, h3');
             headings.forEach((heading, index) => {
                 const li = document.createElement('li');
@@ -438,7 +439,12 @@
             });
             activeItem.classList.add('active');
             const targetId = activeItem.dataset.target;
-            document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                const navHeight = document.querySelector('nav').offsetHeight; // 获取导航栏高度
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10; // 偏移导航高度
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            }
         }
 
         // 拖动导航逻辑
@@ -446,17 +452,20 @@
         const tocMenu = document.getElementById('toc-menu');
         let isDragging = false;
 
-        // PC端鼠标事件
-        tocIcon.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            tocMenu.style.display = 'block';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
+        // 处理拖动高亮
+        function handleMove(clientY) {
             if (isDragging) {
-                const clientY = e.clientY;
                 const tocItems = document.querySelectorAll('#toc-menu li');
+                let menuTop = tocMenu.getBoundingClientRect().top;
+                let menuBottom = tocMenu.getBoundingClientRect().bottom;
+
+                // 如果触摸超出菜单顶部或底部，滚动菜单
+                if (clientY < menuTop + 20) {
+                    tocMenu.scrollTop -= 10;
+                } else if (clientY > menuBottom - 20) {
+                    tocMenu.scrollTop += 10;
+                }
+
                 tocItems.forEach(item => {
                     const rect = item.getBoundingClientRect();
                     if (clientY >= rect.top && clientY <= rect.bottom) {
@@ -464,6 +473,18 @@
                     }
                 });
             }
+        }
+
+        // PC端鼠标事件
+        tocIcon.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            updateTOC(); // 确保每次打开时更新目录
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            handleMove(e.clientY);
         });
 
         document.addEventListener('mouseup', () => {
@@ -477,21 +498,13 @@
         tocIcon.addEventListener('touchstart', (e) => {
             isDragging = true;
             tocMenu.style.display = 'block';
+            updateTOC(); // 确保每次打开时更新目录
             e.preventDefault();
         });
 
         document.addEventListener('touchmove', (e) => {
-            if (isDragging) {
-                const clientY = e.touches[0].clientY;
-                const tocItems = document.querySelectorAll('#toc-menu li');
-                tocItems.forEach(item => {
-                    const rect = item.getBoundingClientRect();
-                    if (clientY >= rect.top && clientY <= rect.bottom) {
-                        highlightTOCItem(item);
-                    }
-                });
-                e.preventDefault(); // 防止页面滚动
-            }
+            handleMove(e.touches[0].clientY);
+            e.preventDefault();
         });
 
         document.addEventListener('touchend', () => {
