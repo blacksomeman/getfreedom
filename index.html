@@ -139,6 +139,7 @@
             border-radius: 5px;
             padding: 10px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* 兼容iOS和Firefox */
             display: none;
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -410,7 +411,6 @@
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
 
-            // 延迟更新目录，确保DOM已渲染
             setTimeout(() => {
                 updateTOC();
             }, 100);
@@ -423,12 +423,13 @@
             const activeProject = document.querySelector('.project.active');
             if (!activeProject) return;
             const headings = activeProject.querySelectorAll('h2, h3');
+            const projectId = activeProject.id;
             headings.forEach((heading, index) => {
                 const li = document.createElement('li');
                 li.textContent = heading.textContent;
                 li.classList.add(heading.tagName.toLowerCase());
-                li.dataset.target = `heading-${projectId}-${index}`; // 项目唯一ID
-                heading.id = `heading-${projectId}-${index}`; // 为标题设置唯一ID
+                li.dataset.target = `heading-${projectId}-${index}`;
+                heading.id = `heading-${projectId}-${index}`;
                 tocList.appendChild(li);
             });
         }
@@ -442,9 +443,14 @@
             const targetId = activeItem.dataset.target;
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                const navHeight = document.querySelector('nav').offsetHeight;
+                const navHeight = document.querySelector('nav').offsetHeight || 60; // 默认60px
                 const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10;
-                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                // 兼容平滑滚动
+                if ('scrollBehavior' in document.documentElement.style) {
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                } else {
+                    window.scrollTo(0, targetPosition); // 降级普通滚动
+                }
             } else {
                 console.error(`Target element with ID ${targetId} not found`);
             }
@@ -454,14 +460,14 @@
         const tocIcon = document.getElementById('toc-icon');
         const tocMenu = document.getElementById('toc-menu');
         let isDragging = false;
-        let projectId = 'project1'; // 默认项目ID
 
         // 处理拖动高亮
         function handleMove(clientY) {
             if (isDragging) {
                 const tocItems = document.querySelectorAll('#toc-menu li');
-                let menuTop = tocMenu.getBoundingClientRect().top;
-                let menuBottom = tocMenu.getBoundingClientRect().bottom;
+                const menuRect = tocMenu.getBoundingClientRect();
+                let menuTop = menuRect.top;
+                let menuBottom = menuRect.bottom;
 
                 if (clientY < menuTop + 20) {
                     tocMenu.scrollTop -= 10;
@@ -482,7 +488,6 @@
         tocIcon.addEventListener('mousedown', (e) => {
             isDragging = true;
             tocMenu.style.display = 'block';
-            projectId = document.querySelector('.project.active').id; // 更新当前项目ID
             updateTOC();
             e.preventDefault();
         });
@@ -502,29 +507,27 @@
         tocIcon.addEventListener('touchstart', (e) => {
             isDragging = true;
             tocMenu.style.display = 'block';
-            projectId = document.querySelector('.project.active').id; // 更新当前项目ID
             updateTOC();
             e.preventDefault();
-        });
+        }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
             handleMove(e.touches[0].clientY);
-            e.preventDefault();
-        });
+            if (isDragging) e.preventDefault(); // 仅在拖动时阻止默认
+        }, { passive: false });
 
         document.addEventListener('touchend', () => {
             if (isDragging) {
                 isDragging = false;
                 tocMenu.style.display = 'none';
             }
-        });
+        }, { passive: false });
 
         tocMenu.addEventListener('touchstart', (e) => {
             e.stopPropagation();
-        });
+        }, { passive: false });
 
         window.addEventListener('load', () => {
-            projectId = 'project1';
             updateTOC();
         });
     </script>
