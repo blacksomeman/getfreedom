@@ -352,7 +352,7 @@
     <!-- 项目二 -->
     <div id="project2" class="project">
         <h2>项目二：OTC商家计划</h2>
-        <p>未来规划：成为OTC（场外交易）商家，提供长期利润分成。</p>
+        <p>未来规划：成为OTC（场外交易）商家，提供长期利润分成。</pre>
         <p><strong>利润回馈</strong>：无论阶段，利润的50%按赞助金额比例返还，累计回馈达赞助额10倍时停止。</p>
 
         <h2>项目阶段</h2>
@@ -385,7 +385,7 @@
         <h2>利润分配与回馈</h2>
         <ul>
             <li><strong>分成机制</strong>：每个阶段利润的50%按赞助金额比例分配给支持者。</li>
-            <li><strong>回馈上限</strong>：每位支持者累计回馈达赞 talonlogin12345
+            <li><strong>回馈上限</strong>：每位支持者累计回馈达赞助额10倍时停止。</li>
             <li><strong>总回馈</strong>：项目一和项目二合计回馈上限为赞助额20倍。</li>
         </ul>
     </div>
@@ -442,8 +442,8 @@
 
         tocIcon.addEventListener('mousedown', (e) => {
             isDragging = true;
-            tocMenu.style.display = 'block';
-            e.preventDefault();
+            tocMenu.style.display = 'block'; // 按住时显示菜单
+            e.preventDefault(); // 防止默认行为
         });
 
         document.addEventListener('mousemove', (e) => {
@@ -452,7 +452,7 @@
                 tocItems.forEach(item => {
                     const rect = item.getBoundingClientRect();
                     if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                        highlightTOCItem(item);
+                        highlightTOCItem(item); // 高亮并跳转
                     }
                 });
             }
@@ -461,12 +461,17 @@
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
-                tocMenu.style.display = 'none';
+                tocMenu.style.display = 'none'; // 松开时隐藏菜单
             }
         });
 
+        // 防止菜单外点击干扰
+        tocMenu.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); // 阻止事件冒泡
+        });
+
         // 页面加载时生成目录
-        window.onload = updateTOC;
+        window.addEventListener('load', updateTOC);
     </script>
 </body>
 </html>
