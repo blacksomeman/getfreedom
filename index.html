@@ -115,15 +115,15 @@
         .project.active {
             display: block;
         }
-        /* 右侧导航按钮和菜单样式 */
-        #toc-button {
+        /* 右侧导航图案和菜单样式 */
+        #toc-icon {
             position: fixed;
             right: 20px;
             top: 100px;
-            background: #24292e;
-            color: #fff;
-            border: none;
-            padding: 10px;
+            width: 30px;
+            height: 30px;
+            background: #24292e url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>') no-repeat center;
+            background-size: 20px;
             border-radius: 5px;
             cursor: pointer;
             z-index: 1001;
@@ -173,8 +173,8 @@
         <a href="#project2" onclick="showProject('project2')">项目二</a>
     </nav>
 
-    <!-- 右侧导航按钮 -->
-    <button id="toc-button">标题导航</button>
+    <!-- 右侧导航图案 -->
+    <div id="toc-icon"></div>
     <div id="toc-menu">
         <ul id="toc-list"></ul>
     </div>
@@ -385,7 +385,7 @@
         <h2>利润分配与回馈</h2>
         <ul>
             <li><strong>分成机制</strong>：每个阶段利润的50%按赞助金额比例分配给支持者。</li>
-            <li><strong>回馈上限</strong>：每位支持者累计回馈达赞助额10倍时停止。</li>
+            <li><strong>回馈上限</strong>：每位支持者累计回馈达赞 talonlogin12345
             <li><strong>总回馈</strong>：项目一和项目二合计回馈上限为赞助额20倍。</li>
         </ul>
     </div>
@@ -406,7 +406,7 @@
                 link.classList.remove('active');
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
-            updateTOC(); // 更新目录
+            updateTOC();
         }
 
         // 生成目录
@@ -421,50 +421,52 @@
                 li.classList.add(heading.tagName.toLowerCase());
                 li.dataset.target = `heading-${index}`;
                 heading.id = `heading-${index}`;
-                li.addEventListener('click', () => {
-                    document.getElementById(`heading-${index}`).scrollIntoView({ behavior: 'smooth' });
-                    highlightTOCItem(li);
-                });
                 tocList.appendChild(li);
             });
         }
 
-        // 高亮当前目录项
+        // 高亮当前目录项并跳转
         function highlightTOCItem(activeItem) {
             document.querySelectorAll('#toc-menu li').forEach(item => {
                 item.classList.remove('active');
             });
             activeItem.classList.add('active');
+            const targetId = activeItem.dataset.target;
+            document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 按钮切换目录显示
-        const tocButton = document.getElementById('toc-button');
+        // 拖动导航
+        const tocIcon = document.getElementById('toc-icon');
         const tocMenu = document.getElementById('toc-menu');
-        tocButton.addEventListener('click', () => {
-            tocMenu.style.display = tocMenu.style.display === 'block' ? 'none' : 'block';
+        let isDragging = false;
+
+        tocIcon.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            e.preventDefault();
         });
 
-        // 页面加载时生成目录
-        window.onload = updateTOC;
-
-        // 滚动时更新高亮
-        window.addEventListener('scroll', () => {
-            const headings = document.querySelectorAll('.project.active h2, .project.active h3');
-            let currentHeading = null;
-            headings.forEach(heading => {
-                if (heading.getBoundingClientRect().top <= 100) {
-                    currentHeading = heading;
-                }
-            });
-            if (currentHeading) {
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
                 const tocItems = document.querySelectorAll('#toc-menu li');
                 tocItems.forEach(item => {
-                    if (item.dataset.target === currentHeading.id) {
+                    const rect = item.getBoundingClientRect();
+                    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
                         highlightTOCItem(item);
                     }
                 });
             }
         });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+            }
+        });
+
+        // 页面加载时生成目录
+        window.onload = updateTOC;
     </script>
 </body>
 </html>
