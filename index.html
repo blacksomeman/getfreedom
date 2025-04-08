@@ -118,22 +118,23 @@
         /* 右侧导航图案和菜单样式 */
         #toc-icon {
             position: fixed;
-            right: 20px;
+            right: 10px;
             top: 100px;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             background: #24292e url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>') no-repeat center;
-            background-size: 20px;
+            background-size: 24px;
             border-radius: 5px;
             cursor: pointer;
             z-index: 1001;
+            touch-action: none; /* 防止触摸干扰 */
         }
         #toc-menu {
             position: fixed;
-            right: 20px;
-            top: 140px;
-            width: 250px;
-            max-height: 70vh;
+            right: 10px;
+            top: 150px;
+            width: 200px;
+            max-height: 60vh;
             background: #fff;
             border: 1px solid #eaecef;
             border-radius: 5px;
@@ -149,7 +150,7 @@
             margin: 0;
         }
         #toc-menu li {
-            padding: 5px 10px;
+            padding: 8px 10px;
             cursor: pointer;
         }
         #toc-menu li:hover {
@@ -164,6 +165,11 @@
         #toc-menu li.active {
             background: #0366d6;
             color: #fff;
+        }
+        @media (max-width: 600px) {
+            #toc-menu {
+                width: 150px; /* 手机端缩小菜单 */
+            }
         }
     </style>
 </head>
@@ -352,7 +358,7 @@
     <!-- 项目二 -->
     <div id="project2" class="project">
         <h2>项目二：OTC商家计划</h2>
-        <p>未来规划：成为OTC（场外交易）商家，提供长期利润分成。</pre>
+        <p>未来规划：成为OTC（场外交易）商家，提供长期利润分成。</p>
         <p><strong>利润回馈</strong>：无论阶段，利润的50%按赞助金额比例返还，累计回馈达赞助额10倍时停止。</p>
 
         <h2>项目阶段</h2>
@@ -435,24 +441,26 @@
             document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 拖动导航
+        // 拖动导航逻辑
         const tocIcon = document.getElementById('toc-icon');
         const tocMenu = document.getElementById('toc-menu');
         let isDragging = false;
 
+        // PC端鼠标事件
         tocIcon.addEventListener('mousedown', (e) => {
             isDragging = true;
-            tocMenu.style.display = 'block'; // 按住时显示菜单
-            e.preventDefault(); // 防止默认行为
+            tocMenu.style.display = 'block';
+            e.preventDefault();
         });
 
         document.addEventListener('mousemove', (e) => {
             if (isDragging) {
+                const clientY = e.clientY;
                 const tocItems = document.querySelectorAll('#toc-menu li');
                 tocItems.forEach(item => {
                     const rect = item.getBoundingClientRect();
-                    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                        highlightTOCItem(item); // 高亮并跳转
+                    if (clientY >= rect.top && clientY <= rect.bottom) {
+                        highlightTOCItem(item);
                     }
                 });
             }
@@ -461,13 +469,41 @@
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
-                tocMenu.style.display = 'none'; // 松开时隐藏菜单
+                tocMenu.style.display = 'none';
             }
         });
 
-        // 防止菜单外点击干扰
-        tocMenu.addEventListener('mousedown', (e) => {
-            e.stopPropagation(); // 阻止事件冒泡
+        // 手机端触摸事件
+        tocIcon.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            e.preventDefault();
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const clientY = e.touches[0].clientY;
+                const tocItems = document.querySelectorAll('#toc-menu li');
+                tocItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    if (clientY >= rect.top && clientY <= rect.bottom) {
+                        highlightTOCItem(item);
+                    }
+                });
+                e.preventDefault(); // 防止页面滚动
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+            }
+        });
+
+        // 防止菜单外触摸干扰
+        tocMenu.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
         });
 
         // 页面加载时生成目录
