@@ -201,7 +201,6 @@
             background: #f6f8fa;
             border-radius: 6px;
         }
-        /* 点击复制样式 */
         #walletAddress {
             cursor: pointer;
             display: inline-block;
@@ -216,6 +215,11 @@
             margin-left: 10px;
             color: #0366d6;
             font-size: 0.9em;
+        }
+        .address-note {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -329,7 +333,8 @@
 
         <div class="highlight">
             <h3>钱包地址</h3>
-            <p><strong>文本地址</strong>: <span id="walletAddress" onclick="copyToClipboard()">（请在此填入你的钱包文本地址）</span><span id="copyFeedback"></span></p>
+            <p><strong>文本地址</strong>: <span id="walletAddress" onclick="copyToClipboard()">TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN</span><span id="copyFeedback"></span></p>
+            <p class="address-note">备注：这是Tron链的USDT接收地址</p>
             <p><strong>OKX二维码</strong>:</p>
             <img src="./okx_wallet_qr.jpg" alt="OKX Wallet QR Code" style="max-width: 200px; border: 1px solid #eaecef; border-radius: 6px;">
         </div>
@@ -610,7 +615,6 @@
             `;
         }
 
-        // 点击复制钱包地址
         function copyToClipboard() {
             const walletAddress = document.getElementById('walletAddress').textContent;
             navigator.clipboard.writeText(walletAddress).then(() => {
@@ -618,7 +622,7 @@
                 feedback.textContent = '已复制！';
                 setTimeout(() => {
                     feedback.textContent = '';
-                }, 2000); // 2秒后清除提示
+                }, 2000);
             }).catch(err => {
                 console.error('复制失败: ', err);
                 document.getElementById('copyFeedback').textContent = '复制失败，请手动复制';
