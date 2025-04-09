@@ -3,52 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日复利计算器</title>
+    <title>加密货币收益项目</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 80px 20px 20px;
             line-height: 1.6;
             color: #333;
             -webkit-font-smoothing: antialiased;
         }
-        h1 {
+        h1, h2, h3 {
             color: #24292e;
+        }
+        h1 {
             border-bottom: 2px solid #eaecef;
             padding-bottom: 10px;
         }
-        .calculator {
-            margin-top: 20px;
+        h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 5px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 200px;
-            padding: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #eaecef;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 20px;
-            background: #0366d6;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #024ea4;
-        }
-        #result {
-            margin-top: 20px;
-            padding: 10px;
+        code {
             background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, monospace;
+        }
+        pre {
+            background: #f6f8fa;
+            padding: 15px;
             border-radius: 6px;
+            overflow-x: auto;
+        }
+        ul {
+            padding-left: 20px;
         }
         a {
             color: #0366d6;
@@ -57,27 +47,554 @@
         a:hover {
             text-decoration: underline;
         }
+        .highlight {
+            background: #fffbdd;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .screenshot {
+            margin-top: 20px;
+        }
+        .screenshot img {
+            max-width: 100%;
+            border: 1px solid #eaecef;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #f6f8fa;
+            border-radius: 6px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #eaecef;
+        }
+        th {
+            background: #eaecef;
+            color: #24292e;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #f6f8fa;
+            padding: 15px;
+            border-bottom: 1px solid #eaecef;
+            text-align: center;
+            z-index: 1000;
+        }
+        nav a {
+            margin: 0 30px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #0366d6;
+            text-decoration: none;
+            padding: 5px 10px;
+            line-height: 1.5;
+        }
+        nav a:hover {
+            color: #24292e;
+        }
+        nav a.active {
+            color: #24292e;
+            border-bottom: 2px solid #24292e;
+        }
+        .project {
+            display: none;
+        }
+        .project.active {
+            display: block;
+        }
+        #toc-icon {
+            position: fixed;
+            right: 10px;
+            top: 100px;
+            width: 40px;
+            height: 40px;
+            background: #24292e url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>') no-repeat center;
+            background-size: 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        #toc-menu {
+            position: fixed;
+            right: 10px;
+            top: 150px;
+            width: 200px;
+            max-height: 60vh;
+            background: #fff;
+            border: 1px solid #eaecef;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: none;
+            z-index: 1001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            touch-action: pan-y;
+        }
+        #toc-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #toc-menu li {
+            padding: 8px 10px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        #toc-menu li:hover {
+            background: #f6f8fa;
+        }
+        #toc-menu li.h2 {
+            font-weight: bold;
+        }
+        #toc-menu li.h3 {
+            margin-left: 20px;
+        }
+        #toc-menu li.active {
+            background: #0366d6;
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            #toc-menu {
+                width: 150px;
+            }
+        }
+        /* 复利计算器样式 */
+        .compound-calculator input {
+            width: 200px;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #eaecef;
+            border-radius: 4px;
+        }
+        .compound-calculator button {
+            padding: 10px 20px;
+            background: #0366d6;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .compound-calculator button:hover {
+            background: #024ea4;
+        }
+        .compound-calculator #result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f6f8fa;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
-    <h1>日复利计算器</h1>
-    <p>输入以下参数，计算指定月份的日复利结果（每月按30天计算）：</p>
-    <div class="calculator">
-        <label for="initialAmount">起始资金（单位：任意货币）：</label>
-        <input type="number" id="initialAmount" placeholder="例如：30000" step="any" min="0">
-        
-        <label for="dailyRate">每日收益率（%）：</label>
-        <input type="number" id="dailyRate" placeholder="例如：3" step="any" min="0">
-        
-        <label for="months">月份数量：</label>
-        <input type="number" id="months" placeholder="例如：6" step="1" min="1">
-        
-        <button onclick="calculateCompound()">计算</button>
-        <div id="result"></div>
+    <nav>
+        <a href="#project1" class="active" onclick="showProject('project1')">项目一</a>
+        <a href="#project2" onclick="showProject('project2')">项目二</a>
+    </nav>
+
+    <div id="toc-icon"></div>
+    <div id="toc-menu">
+        <ul id="toc-list"></ul>
     </div>
-    <p style="margin-top: 20px;"><a href="index.html">返回项目页面</a></p>
+
+    <div id="project1" class="project active">
+        <h2>项目一：加密货币赌场收益</h2>
+        <p>一个基于技术突破的低风险、高收益项目</p>
+
+        <h2>项目概述</h2>
+        <p>大家好，我是一名国内外卖骑手，靠送外卖维持生计。不参与加密货币合约或投机交易，但一直在探索用有限资金实现稳定收益。无论你在币圈是盈利还是亏损，请看看我的项目。</p>
+
+        <h2>项目背景</h2>
+        <ul>
+            <li><strong>平台</strong>：全球最大加密货币赌场（具体名称可<a href="https://www.google.com">Google</a>），公平、安全，币圈朋友可能已猜到。</li>
+            <li><strong>研究时间</strong>：测试和规划超过一年。</li>
+            <li><strong>核心问题</strong>：平台靠概率优势和赌徒心理让普通玩家难以盈利，除非拥有天量本金。</li>
+            <li><strong>目标</strong>：用有限资金实现超低风险的稳定收益。</li>
+        </ul>
+
+        <h2>项目原理</h2>
+        <h3>平台机制</h3>
+        <ul>
+            <li>同一账户最多支持2个设备登录，超限自动退出，通过验证<code>cookies</code>、<code>session</code>和IP实现。</li>
+            <li>普通玩家用1-2设备长期投注，因平台优势必然亏损，平台始终是赢家。</li>
+        </ul>
+
+        <h3>我的突破</h3>
+        <ul>
+            <li><strong>技术背景</strong>：大学学计算机信息安全，有网络基础，现为外卖员。</li>
+            <li><strong>创新点</strong>：绕过登录限制，单账户运行数千窗口，成本可控。</li>
+            <li><strong>实现方式</strong>：
+                <ol>
+                    <li><strong>多设备多窗口</strong>：突破限制，开3000+窗口，平摊风险，最大化账户利用率。</li>
+                    <li><strong>自动化运行</strong>：平台支持自定义策略自动投注，无需人工盯盘。</li>
+                    <li><strong>每日维护</strong>：每24小时手动点击验证所有窗口（约4-5小时），是我送外卖外的日常工作。</li>
+                </ol>
+            </li>
+        </ul>
+
+        <h3>策略与收益</h3>
+        <ul>
+            <li><strong>策略</strong>：采用<a href="https://zh.wikipedia.org/wiki/马丁格尔策略">马丁格尔</a>，起始押注极低，确保安全。</li>
+            <li><strong>单窗口收益</strong>：利润微薄（日收益<0.001%），普通玩家难以盈利。</li>
+            <li><strong>多窗口效果</strong>：
+                <ul>
+                    <li>3000+窗口，日收益率约3%。</li>
+                    <li>通过复利滚动利润：
+                        <pre>
+1个月：150%
+2个月：500%
+3个月：1400%
+4个月：本金35倍
+5个月：90倍
+6个月：220倍
+                        </pre>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>退出计划</strong>：6个月后停止，收益对平台影响微小，避免“树大招风”。</li>
+        </ul>
+
+        <h3>成本与本金</h3>
+        <ul>
+            <li><strong>运行成本</strong>：3000窗口每月约6000元人民币。</li>
+            <li><strong>初始本金</strong>：计划投入3万人民币（约4100 USDT），首月收益覆盖成本并盈利。</li>
+            <li><strong>测试情况</strong>：已运行一年多，稳定性高，风险接近0。</li>
+        </ul>
+
+        <h2>资金需求与回报</h2>
+        <ul>
+            <li><strong>个人困境</strong>：外卖收入有限，每月仅剩不到2000元，难以凑齐目标本金。</li>
+            <li><strong>合作方式</strong>：希望借助币圈朋友支持，金额不限。</li>
+            <li><strong>回报承诺</strong>：
+                <ul>
+                    <li>每支持1 USDT，奉还10 USDT（10倍回报）。</li>
+                    <li>例：支持10 USDT，返回100 USDT。</li>
+                </ul>
+            </li>
+            <li><strong>启动条件</strong>：募集5000 USDT即开始部署，超额后停止收款并通知。</li>
+            <li><strong>资金管理</strong>：
+                <ul>
+                    <li>所有打入资金记录来源地址，公开在<a href="#">Google Doc</a>（链接待更新）。</li>
+                    <li>支持者可留言地址截图，我补充ID公示。</li>
+                </ul>
+            </li>
+            <li><strong>进度更新</strong>：每周不定期发帖汇报收益。</li>
+        </ul>
+
+        <h2>风险与透明度</h2>
+        <ul>
+            <li><strong>风险控制</strong>：概率风险定为十亿分之一，通过海量窗口和低起始押注实现。</li>
+            <li><strong>测试验证</strong>：一年多运行未遇风险，复利滚动确保利润增长。</li>
+            <li><strong>信任选择</strong>：
+                <ul>
+                    <li>觉得可疑可忽略。</li>
+                    <li>若愿尝试，哪怕不在意回报，我也感激支持。个人会视为低风险投资，投几USDT试水。</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>我的职责</h2>
+        <ul>
+            <li><strong>前期投入</strong>：购置设备，部署3000+窗口。</li>
+            <li><strong>日常操作</strong>：
+                <ol>
+                    <li>每日点击验证（4-5小时）。</li>
+                    <li>每日利润复利回滚。</li>
+                </ol>
+            </li>
+        </ul>
+
+        <div class="highlight">
+            <h3>钱包地址</h3>
+            <p><strong>文本地址</strong>: <code>（请在此填入你的钱包文本地址）</code></p>
+            <p><strong>OKX二维码</strong>:</p>
+            <img src="./okx_wallet_qr.png" alt="OKX Wallet QR Code" style="max-width: 200px; border: 1px solid #eaecef; border-radius: 6px;">
+        </div>
+
+        <h2>补充说明</h2>
+        <ol>
+            <li><strong>风险与成本</strong>：风险概率十亿分之一需更高成本，但不影响收益率，仅与窗口数相关。</li>
+            <li><strong>核心逻辑</strong>：单账户海量窗口降低风险，复利驱动收益爆炸增长。</li>
+            <li><strong>个人感悟</strong>：这是我用技术突破困境的一次尝试，希望与大家共赢。</li>
+        </ol>
+
+        <div class="screenshot">
+            <h2>复利解说与计算</h2>
+            <p>以下是关于复利机制的详细说明和计算结果展示：</p>
+            <h3>复利解说截图</h3>
+            <img src="./compound_interest_1.png" alt="Compound Interest Screenshot 1">
+            <img src="./compound_interest_2.png" alt="Compound Interest Screenshot 2">
+            <img src="./compound_interest_3.png" alt="Compound Interest Screenshot 3">
+            <h3>复利计算结果</h3>
+            <table>
+                <tr>
+                    <th>时间</th>
+                    <th>收益率</th>
+                    <th>本金倍数</th>
+                </tr>
+                <tr>
+                    <td>1个月</td>
+                    <td>150%</td>
+                    <td>2.5倍</td>
+                </tr>
+                <tr>
+                    <td>2个月</td>
+                    <td>500%</td>
+                    <td>6倍</td>
+                </tr>
+                <tr>
+                    <td>3个月</td>
+                    <td>1400%</td>
+                    <td>15倍</td>
+                </tr>
+                <tr>
+                    <td>4个月</td>
+                    <td>3400%</td>
+                    <td>35倍</td>
+                </tr>
+                <tr>
+                    <td>5个月</td>
+                    <td>8900%</td>
+                    <td>90倍</td>
+                </tr>
+                <tr>
+                    <td>6个月</td>
+                    <td>21900%</td>
+                    <td>220倍</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 复利计算器 -->
+        <div class="compound-calculator">
+            <h2>日复利计算器</h2>
+            <p>输入以下参数，计算指定月份的日复利结果（每月按30天计算）：</p>
+            <div style="margin: 20px 0;">
+                <label for="initialAmount">起始资金（单位：任意货币）：</label><br>
+                <input type="number" id="initialAmount" placeholder="例如：30000" step="any" min="0">
+            </div>
+            <div style="margin: 20px 0;">
+                <label for="dailyRate">每日收益率（%）：</label><br>
+                <input type="number" id="dailyRate" placeholder="例如：3" step="any" min="0">
+            </div>
+            <div style="margin: 20px 0;">
+                <label for="months">月份数量：</label><br>
+                <input type="number" id="months" placeholder="例如：6" step="1" min="1">
+            </div>
+            <button onclick="calculateCompound()">计算</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <div id="project2" class="project">
+        <h2>项目二：OTC商家计划</h2>
+        <p>未来规划：成为OTC（场外交易）商家，提供长期利润分成。</p>
+        <p><strong>利润回馈</strong>：无论阶段，利润的50%按赞助金额比例返还，累计回馈达赞助额10倍时停止。</p>
+
+        <h2>项目阶段</h2>
+        <h3>第一阶段：国内OTC</h3>
+        <ul>
+            <li><strong>操作方式</strong>：利用收付工具，日流水6-8万元。</li>
+            <li><strong>利润率</strong>：流水2%-3%，月利润4-7万元。</li>
+            <li><strong>挑战</strong>：
+                <ul>
+                    <li>受监管限制，单笔交易不超过3000元，效率较低。</li>
+                    <li>需解决T+N（交易结算延迟）限制，使用小技巧优化。</li>
+                </ul>
+            </li>
+            <li><strong>现状</strong>：已具备一定操作基础。</li>
+        </ul>
+
+        <h3>第二阶段：海外OTC</h3>
+        <ul>
+            <li><strong>目标</strong>：转向海外市场，日流水可达几十万元。</li>
+            <li><strong>利润率</strong>：与国内相似（2%-3%），但因流水大，日利润1万+，月利润更可观。</li>
+            <li><strong>优势</strong>：
+                <ul>
+                    <li>几乎无监管，避免司法冻结。</li>
+                    <li>交易规模更大，收益更高。</li>
+                </ul>
+            </li>
+            <li><strong>准备工作</strong>：需办理港澳通行证、护照等。</li>
+        </ul>
+
+        <h2>利润分配与回馈</h2>
+        <ul>
+            <li><strong>分成机制</strong>：每个阶段利润的50%按赞助金额比例分配给支持者。</li>
+            <li><strong>回馈上限</strong>：每位支持者累计回馈达赞助额10倍时停止。</li>
+            <li><strong>总回馈</strong>：项目一和项目二合计回馈上限为赞助额20倍。</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>最后更新：2025年4月7日 | 联系方式：（可添加你的联系方式）</p>
+    </footer>
 
     <script>
+        // 项目切换
+        function showProject(projectId) {
+            document.querySelectorAll('.project').forEach(project => {
+                project.classList.remove('active');
+            });
+            const selectedProject = document.getElementById(projectId);
+            selectedProject.classList.add('active');
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
+
+            setTimeout(() => {
+                updateTOC();
+            }, 200);
+        }
+
+        // 生成目录
+        function updateTOC() {
+            const tocList = document.getElementById('toc-list');
+            tocList.innerHTML = '';
+            const activeProject = document.querySelector('.project.active');
+            if (!activeProject) return;
+            const headings = activeProject.querySelectorAll('h2, h3');
+            const projectId = activeProject.id;
+            headings.forEach((heading, index) => {
+                const li = document.createElement('li');
+                li.textContent = heading.textContent;
+                li.classList.add(heading.tagName.toLowerCase());
+                li.dataset.target = `heading-${projectId}-${index}`;
+                heading.id = `heading-${projectId}-${index}`;
+                tocList.appendChild(li);
+            });
+            console.log(`TOC updated for ${projectId}, items: ${headings.length}`);
+        }
+
+        // 高亮目录项（仅高亮，不跳转）
+        function highlightTOCItem(activeItem) {
+            document.querySelectorAll('#toc-menu li').forEach(item => {
+                item.classList.remove('active');
+            });
+            activeItem.classList.add('active');
+        }
+
+        // 执行跳转
+        function scrollToTarget(targetId) {
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                const navHeight = document.querySelector('nav').offsetHeight || 60;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            } else {
+                console.error(`Target element with ID ${targetId} not found`);
+            }
+        }
+
+        // 拖动导航逻辑
+        const tocIcon = document.getElementById('toc-icon');
+        const tocMenu = document.getElementById('toc-menu');
+        let isDragging = false;
+        let lastActiveItem = null;
+
+        // 处理拖动高亮
+        function handleMove(clientY) {
+            if (!isDragging) return;
+            const tocItems = document.querySelectorAll('#toc-menu li');
+            const menuRect = tocMenu.getBoundingClientRect();
+            let menuTop = menuRect.top;
+            let menuBottom = menuRect.bottom;
+
+            if (clientY < menuTop + 20) {
+                tocMenu.scrollTop -= 10;
+            } else if (clientY > menuBottom - 20) {
+                tocMenu.scrollTop += 10;
+            }
+
+            tocItems.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                if (clientY >= rect.top && clientY <= rect.bottom) {
+                    highlightTOCItem(item);
+                    lastActiveItem = item;
+                }
+            });
+            console.log(`Dragging at Y: ${clientY}`);
+        }
+
+        // Mouse Events
+        tocIcon.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            updateTOC();
+            console.log('Mouse down');
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            handleMove(e.clientY);
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+                if (lastActiveItem) {
+                    scrollToTarget(lastActiveItem.dataset.target);
+                }
+                console.log('Mouse up');
+            }
+        });
+
+        // Touch Events
+        tocIcon.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            updateTOC();
+            console.log('Touch start');
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            handleMove(touch.clientY);
+            if (isDragging) e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+                if (lastActiveItem) {
+                    scrollToTarget(lastActiveItem.dataset.target);
+                }
+                console.log('Touch end');
+            }
+        }, { passive: false });
+
+        tocMenu.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        }, { passive: false });
+
+        window.addEventListener('load', () => {
+            updateTOC();
+        });
+
+        // 复利计算器逻辑
         function calculateCompound() {
             const initialAmount = parseFloat(document.getElementById('initialAmount').value);
             const dailyRate = parseFloat(document.getElementById('dailyRate').value) / 100;
