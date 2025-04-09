@@ -128,7 +128,7 @@
             cursor: pointer;
             z-index: 1001;
             touch-action: manipulation; /* 优化Safari触摸 */
-            -webkit-user-select: none; /* 防止Safari误选 */
+            -webkit-user-select: none;
             user-select: none;
         }
         #toc-menu {
@@ -451,10 +451,8 @@
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                setTimeout(() => {
-                    window.scrollBy(0, -navHeight - 10);
-                }, 100); // 延迟调整偏移
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             } else {
                 console.error(`Target element with ID ${targetId} not found`);
             }
@@ -488,72 +486,49 @@
             console.log(`Dragging at Y: ${clientY}`);
         }
 
-        // Pointer Events（优先使用）
-        if ('PointerEvent' in window) {
-            tocIcon.addEventListener('pointerdown', (e) => {
-                isDragging = true;
-                tocMenu.style.display = 'block';
-                updateTOC();
-                console.log('Pointer down');
-                e.preventDefault();
-            });
+        // Mouse Events
+        tocIcon.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            updateTOC();
+            console.log('Mouse down');
+            e.preventDefault();
+        });
 
-            document.addEventListener('pointermove', (e) => {
-                handleMove(e.clientY);
-            });
+        document.addEventListener('mousemove', (e) => {
+            handleMove(e.clientY);
+        });
 
-            document.addEventListener('pointerup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    tocMenu.style.display = 'none';
-                    console.log('Pointer up');
-                }
-            });
-        } else {
-            // 后备：Mouse Events
-            tocIcon.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                tocMenu.style.display = 'block';
-                updateTOC();
-                console.log('Mouse down');
-                e.preventDefault();
-            });
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+                console.log('Mouse up');
+            }
+        });
 
-            document.addEventListener('mousemove', (e) => {
-                handleMove(e.clientY);
-            });
+        // Touch Events
+        tocIcon.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            tocMenu.style.display = 'block';
+            updateTOC();
+            console.log('Touch start');
+            e.preventDefault();
+        }, { passive: false });
 
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    tocMenu.style.display = 'none';
-                    console.log('Mouse up');
-                }
-            });
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0]; // 使用touches，确保兼容
+            handleMove(touch.clientY);
+            if (isDragging) e.preventDefault();
+        }, { passive: false });
 
-            // 后备：Touch Events
-            tocIcon.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                tocMenu.style.display = 'block';
-                updateTOC();
-                console.log('Touch start');
-                e.preventDefault();
-            }, { passive: false });
-
-            document.addEventListener('touchmove', (e) => {
-                const touch = e.changedTouches[0];
-                handleMove(touch.clientY);
-                if (isDragging) e.preventDefault();
-            }, { passive: false });
-
-            document.addEventListener('touchend', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    tocMenu.style.display = 'none';
-                    console.log('Touch end');
-                }
-            }, { passive: false });
-        }
+        document.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                tocMenu.style.display = 'none';
+                console.log('Touch end');
+            }
+        }, { passive: false });
 
         tocMenu.addEventListener('touchstart', (e) => {
             e.stopPropagation();
