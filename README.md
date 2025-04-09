@@ -57,8 +57,8 @@
 
 ### 钱包地址
 - **TRON链地址**：`TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN`  
-  （备注：Tron链USDT接收地址，支持点击复制）
-- **OKX二维码**：见项目页面。
+  （注意：Tron链USDT接收地址）
+- **OKX二维码**：见项目详情页面。
 
 ---
 
@@ -90,6 +90,7 @@
 - **回馈上限**：每位支持者累计回馈达赞助额10倍停止。
 
 ---
+**[详情访问](https://blacksomeman.github.io/getfreedom/)**
 
 ## 联系方式
 - **Twitter**：[@blacksomeman](https://x.com/blacksomeman)
