@@ -90,7 +90,7 @@
             width: 100%;
             background: #f6f8fa;
             padding: 15px;
-            border-bottom: 1px solid #eaecef;
+            border-bottom: 1px solid #eaecef; /* 保留导航栏底部的“大横线” */
             text-align: center;
             z-index: 1000;
         }
@@ -108,8 +108,8 @@
         }
         nav a.active {
             color: #24292e;
-            /* 移除点击时的细横线 */
-            /* border-bottom: 2px solid #24292e; 已注释掉 */
+            /* 删除文字点击时的“细横线” */
+            /* 原有：border-bottom: 2px solid #24292e; 已移除 */
         }
         .project {
             display: none;
