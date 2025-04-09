@@ -139,7 +139,7 @@
             border-radius: 5px;
             padding: 10px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* 兼容iOS和Firefox */
+            -webkit-overflow-scrolling: touch;
             display: none;
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -413,7 +413,7 @@
 
             setTimeout(() => {
                 updateTOC();
-            }, 100);
+            }, 200); // 增加延迟到200ms
         }
 
         // 生成目录
@@ -432,6 +432,8 @@
                 heading.id = `heading-${projectId}-${index}`;
                 tocList.appendChild(li);
             });
+            // 验证ID是否生效
+            console.log(`TOC updated for ${projectId}, items: ${headings.length}`);
         }
 
         // 高亮当前目录项并跳转
@@ -443,14 +445,12 @@
             const targetId = activeItem.dataset.target;
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                const navHeight = document.querySelector('nav').offsetHeight || 60; // 默认60px
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10;
-                // 兼容平滑滚动
-                if ('scrollBehavior' in document.documentElement.style) {
-                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                } else {
-                    window.scrollTo(0, targetPosition); // 降级普通滚动
-                }
+                const navHeight = document.querySelector('nav').offsetHeight || 60;
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // 额外调整偏移
+                setTimeout(() => {
+                    window.scrollBy(0, -navHeight - 10);
+                }, 0);
             } else {
                 console.error(`Target element with ID ${targetId} not found`);
             }
@@ -481,6 +481,7 @@
                         highlightTOCItem(item);
                     }
                 });
+                console.log(`Dragging at Y: ${clientY}`);
             }
         }
 
@@ -508,18 +509,21 @@
             isDragging = true;
             tocMenu.style.display = 'block';
             updateTOC();
+            console.log('Touch started');
             e.preventDefault();
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
-            handleMove(e.touches[0].clientY);
-            if (isDragging) e.preventDefault(); // 仅在拖动时阻止默认
+            const touch = e.changedTouches[0]; // 使用changedTouches
+            handleMove(touch.clientY);
+            if (isDragging) e.preventDefault();
         }, { passive: false });
 
         document.addEventListener('touchend', () => {
             if (isDragging) {
                 isDragging = false;
                 tocMenu.style.display = 'none';
+                console.log('Touch ended');
             }
         }, { passive: false });
 
