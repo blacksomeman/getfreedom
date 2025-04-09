@@ -49,7 +49,7 @@
         }
         .highlight {
             background: #fffbdd;
-            padding: 10px;
+            padding: 15px;
             border-radius: 6px;
         }
         footer {
@@ -201,15 +201,37 @@
             background: #f6f8fa;
             border-radius: 6px;
         }
+        /* 美化后的钱包地址样式 */
         #walletAddress {
             cursor: pointer;
             display: inline-block;
-            padding: 2px 6px;
+            padding: 6px 12px;
             background: #f6f8fa;
-            border-radius: 4px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 0.95em;
+            color: #24292e;
+            word-wrap: break-word; /* 自适应换行 */
+            max-width: 100%; /* 限制宽度以适应屏幕 */
+            transition: background 0.2s ease;
         }
         #walletAddress:hover {
             background: #e1e4e8;
+        }
+        #copyButton {
+            cursor: pointer;
+            padding: 6px 12px;
+            margin-left: 10px;
+            background: #0366d6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: background 0.2s ease;
+        }
+        #copyButton:hover {
+            background: #024ea4;
         }
         #copyFeedback {
             margin-left: 10px;
@@ -220,6 +242,12 @@
             color: #666;
             font-size: 0.9em;
             margin-top: 5px;
+        }
+        .address-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* 允许按钮换行 */
+            gap: 10px; /* 控制地址和按钮间距 */
         }
     </style>
 </head>
@@ -333,7 +361,12 @@
 
         <div class="highlight">
             <h3>钱包地址</h3>
-            <p><strong>文本地址</strong>: <span id="walletAddress" onclick="copyToClipboard()">TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN</span><span id="copyFeedback"></span></p>
+            <p><strong>TRON链地址</strong>:</p>
+            <div class="address-container">
+                <span id="walletAddress" onclick="copyToClipboard()">TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN</span>
+                <button id="copyButton" onclick="copyToClipboard()">复制</button>
+                <span id="copyFeedback"></span>
+            </div>
             <p class="address-note">备注：这是Tron链的USDT接收地址</p>
             <p><strong>OKX二维码</strong>:</p>
             <img src="./okx_wallet_qr.jpg" alt="OKX Wallet QR Code" style="max-width: 200px; border: 1px solid #eaecef; border-radius: 6px;">
