@@ -12,6 +12,7 @@
             padding: 80px 20px 20px;
             line-height: 1.6;
             color: #333;
+            -webkit-font-smoothing: antialiased; /* Safari优化 */
         }
         h1, h2, h3 {
             color: #24292e;
@@ -126,7 +127,9 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1001;
-            touch-action: none;
+            touch-action: manipulation; /* 优化Safari触摸 */
+            -webkit-user-select: none; /* 防止Safari误选 */
+            user-select: none;
         }
         #toc-menu {
             position: fixed;
@@ -139,10 +142,11 @@
             border-radius: 5px;
             padding: 10px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; /* Safari滚动优化 */
             display: none;
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            touch-action: pan-y; /* 允许垂直滚动 */
         }
         #toc-menu ul {
             list-style: none;
@@ -152,6 +156,8 @@
         #toc-menu li {
             padding: 8px 10px;
             cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
         }
         #toc-menu li:hover {
             background: #f6f8fa;
@@ -413,7 +419,7 @@
 
             setTimeout(() => {
                 updateTOC();
-            }, 200); // 增加延迟到200ms
+            }, 200);
         }
 
         // 生成目录
@@ -432,7 +438,6 @@
                 heading.id = `heading-${projectId}-${index}`;
                 tocList.appendChild(li);
             });
-            // 验证ID是否生效
             console.log(`TOC updated for ${projectId}, items: ${headings.length}`);
         }
 
@@ -447,10 +452,9 @@
             if (targetElement) {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
                 targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // 额外调整偏移
                 setTimeout(() => {
                     window.scrollBy(0, -navHeight - 10);
-                }, 0);
+                }, 100); // 延迟调整偏移
             } else {
                 console.error(`Target element with ID ${targetId} not found`);
             }
@@ -463,69 +467,93 @@
 
         // 处理拖动高亮
         function handleMove(clientY) {
-            if (isDragging) {
-                const tocItems = document.querySelectorAll('#toc-menu li');
-                const menuRect = tocMenu.getBoundingClientRect();
-                let menuTop = menuRect.top;
-                let menuBottom = menuRect.bottom;
+            if (!isDragging) return;
+            const tocItems = document.querySelectorAll('#toc-menu li');
+            const menuRect = tocMenu.getBoundingClientRect();
+            let menuTop = menuRect.top;
+            let menuBottom = menuRect.bottom;
 
-                if (clientY < menuTop + 20) {
-                    tocMenu.scrollTop -= 10;
-                } else if (clientY > menuBottom - 20) {
-                    tocMenu.scrollTop += 10;
-                }
-
-                tocItems.forEach(item => {
-                    const rect = item.getBoundingClientRect();
-                    if (clientY >= rect.top && clientY <= rect.bottom) {
-                        highlightTOCItem(item);
-                    }
-                });
-                console.log(`Dragging at Y: ${clientY}`);
+            if (clientY < menuTop + 20) {
+                tocMenu.scrollTop -= 10;
+            } else if (clientY > menuBottom - 20) {
+                tocMenu.scrollTop += 10;
             }
+
+            tocItems.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                if (clientY >= rect.top && clientY <= rect.bottom) {
+                    highlightTOCItem(item);
+                }
+            });
+            console.log(`Dragging at Y: ${clientY}`);
         }
 
-        // PC端鼠标事件
-        tocIcon.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            tocMenu.style.display = 'block';
-            updateTOC();
-            e.preventDefault();
-        });
+        // Pointer Events（优先使用）
+        if ('PointerEvent' in window) {
+            tocIcon.addEventListener('pointerdown', (e) => {
+                isDragging = true;
+                tocMenu.style.display = 'block';
+                updateTOC();
+                console.log('Pointer down');
+                e.preventDefault();
+            });
 
-        document.addEventListener('mousemove', (e) => {
-            handleMove(e.clientY);
-        });
+            document.addEventListener('pointermove', (e) => {
+                handleMove(e.clientY);
+            });
 
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                tocMenu.style.display = 'none';
-            }
-        });
+            document.addEventListener('pointerup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    tocMenu.style.display = 'none';
+                    console.log('Pointer up');
+                }
+            });
+        } else {
+            // 后备：Mouse Events
+            tocIcon.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                tocMenu.style.display = 'block';
+                updateTOC();
+                console.log('Mouse down');
+                e.preventDefault();
+            });
 
-        // 手机端触摸事件
-        tocIcon.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            tocMenu.style.display = 'block';
-            updateTOC();
-            console.log('Touch started');
-            e.preventDefault();
-        }, { passive: false });
+            document.addEventListener('mousemove', (e) => {
+                handleMove(e.clientY);
+            });
 
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.changedTouches[0]; // 使用changedTouches
-            handleMove(touch.clientY);
-            if (isDragging) e.preventDefault();
-        }, { passive: false });
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    tocMenu.style.display = 'none';
+                    console.log('Mouse up');
+                }
+            });
 
-        document.addEventListener('touchend', () => {
-            if (isDragging) {
-                isDragging = false;
-                tocMenu.style.display = 'none';
-                console.log('Touch ended');
-            }
-        }, { passive: false });
+            // 后备：Touch Events
+            tocIcon.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                tocMenu.style.display = 'block';
+                updateTOC();
+                console.log('Touch start');
+                e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('touchmove', (e) => {
+                const touch = e.changedTouches[0];
+                handleMove(touch.clientY);
+                if (isDragging) e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('touchend', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    tocMenu.style.display = 'none';
+                    console.log('Touch end');
+                }
+            }, { passive: false });
+        }
 
         tocMenu.addEventListener('touchstart', (e) => {
             e.stopPropagation();
