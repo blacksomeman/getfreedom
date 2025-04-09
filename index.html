@@ -12,7 +12,7 @@
             padding: 80px 20px 20px;
             line-height: 1.6;
             color: #333;
-            -webkit-font-smoothing: antialiased; /* Safari优化 */
+            -webkit-font-smoothing: antialiased;
         }
         h1, h2, h3 {
             color: #24292e;
@@ -127,7 +127,7 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1001;
-            touch-action: manipulation; /* 优化Safari触摸 */
+            touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
         }
@@ -142,11 +142,11 @@
             border-radius: 5px;
             padding: 10px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* Safari滚动优化 */
+            -webkit-overflow-scrolling: touch;
             display: none;
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            touch-action: pan-y; /* 允许垂直滚动 */
+            touch-action: pan-y;
         }
         #toc-menu ul {
             list-style: none;
@@ -441,13 +441,16 @@
             console.log(`TOC updated for ${projectId}, items: ${headings.length}`);
         }
 
-        // 高亮当前目录项并跳转
+        // 高亮目录项（仅高亮，不跳转）
         function highlightTOCItem(activeItem) {
             document.querySelectorAll('#toc-menu li').forEach(item => {
                 item.classList.remove('active');
             });
             activeItem.classList.add('active');
-            const targetId = activeItem.dataset.target;
+        }
+
+        // 执行跳转
+        function scrollToTarget(targetId) {
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
@@ -462,6 +465,7 @@
         const tocIcon = document.getElementById('toc-icon');
         const tocMenu = document.getElementById('toc-menu');
         let isDragging = false;
+        let lastActiveItem = null;
 
         // 处理拖动高亮
         function handleMove(clientY) {
@@ -481,6 +485,7 @@
                 const rect = item.getBoundingClientRect();
                 if (clientY >= rect.top && clientY <= rect.bottom) {
                     highlightTOCItem(item);
+                    lastActiveItem = item; // 记录最后高亮项
                 }
             });
             console.log(`Dragging at Y: ${clientY}`);
@@ -503,6 +508,9 @@
             if (isDragging) {
                 isDragging = false;
                 tocMenu.style.display = 'none';
+                if (lastActiveItem) {
+                    scrollToTarget(lastActiveItem.dataset.target); // 松手后跳转
+                }
                 console.log('Mouse up');
             }
         });
@@ -517,7 +525,7 @@
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0]; // 使用touches，确保兼容
+            const touch = e.touches[0];
             handleMove(touch.clientY);
             if (isDragging) e.preventDefault();
         }, { passive: false });
@@ -526,6 +534,9 @@
             if (isDragging) {
                 isDragging = false;
                 tocMenu.style.display = 'none';
+                if (lastActiveItem) {
+                    scrollToTarget(lastActiveItem.dataset.target); // 松手后跳转
+                }
                 console.log('Touch end');
             }
         }, { passive: false });
