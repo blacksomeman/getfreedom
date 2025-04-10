@@ -76,7 +76,7 @@
   - 若有缘，可大胆尝试，我定不负支持。
 
 ### 钱包地址
-- **TRON链地址**：`TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN`（USDT接收地址）。
+- **TRON链地址**：`TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN`。
 - **OKX二维码**：见网页图片。
 
 ### 补充说明
