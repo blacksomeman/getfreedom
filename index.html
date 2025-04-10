@@ -492,14 +492,18 @@
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
 
-            // 使用 requestAnimationFrame 确保在下一次重绘时滚动
+            // 双重 requestAnimationFrame 确保布局更新后滚动
             requestAnimationFrame(() => {
-                const navHeight = document.querySelector('nav').offsetHeight || 60;
-                window.scrollTo({
-                    top: selectedProject.offsetTop - navHeight - 10,
-                    behavior: 'smooth'
+                // 强制触发重排，确保 offsetTop 准确
+                selectedProject.offsetTop; // 访问属性触发重排
+                requestAnimationFrame(() => {
+                    const navHeight = document.querySelector('nav').offsetHeight || 60;
+                    window.scrollTo({
+                        top: selectedProject.offsetTop - navHeight - 10,
+                        behavior: 'smooth'
+                    });
+                    updateTOC();
                 });
-                updateTOC();
             });
         }
 
