@@ -492,15 +492,15 @@
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
 
-            // 确保DOM更新后再滚动
-            setTimeout(() => {
+            // 使用 requestAnimationFrame 确保在下一次重绘时滚动
+            requestAnimationFrame(() => {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
                 window.scrollTo({
                     top: selectedProject.offsetTop - navHeight - 10,
                     behavior: 'smooth'
                 });
                 updateTOC();
-            }, 0); // 延迟0ms，等待DOM渲染完成
+            });
         }
 
         function updateTOC() {
