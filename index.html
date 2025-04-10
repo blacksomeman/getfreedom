@@ -492,19 +492,16 @@
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
 
-            // 双重 requestAnimationFrame 确保布局更新后滚动
-            requestAnimationFrame(() => {
-                // 强制触发重排，确保 offsetTop 准确
-                selectedProject.offsetTop; // 访问属性触发重排
-                requestAnimationFrame(() => {
-                    const navHeight = document.querySelector('nav').offsetHeight || 60;
-                    window.scrollTo({
-                        top: selectedProject.offsetTop - navHeight - 10,
-                        behavior: 'smooth'
-                    });
-                    updateTOC();
+            // 使用 setTimeout 延迟滚动，确保布局更新
+            setTimeout(() => {
+                const navHeight = document.querySelector('nav').offsetHeight || 60;
+                const targetPosition = selectedProject.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
-            });
+                updateTOC();
+            }, 50); // 50ms 延迟，确保 Firefox 布局稳定
         }
 
         function updateTOC() {
