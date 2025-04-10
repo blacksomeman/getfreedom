@@ -366,7 +366,7 @@
                 <button id="copyButton" onclick="copyToClipboard()">复制</button>
                 <span id="copyFeedback"></span>
             </div>
-            <p class="address-note">备注：这是Tron链的USDT接收地址</p>
+            <p class="address-note">注意：这是Tron链的接收地址，请勿转错</p>
             <p><strong>OKX二维码</strong>:</p>
             <img src="./okx_wallet_qr.jpg" alt="OKX Wallet QR Code" style="max-width: 200px; border: 1px solid #eaecef; border-radius: 6px;">
         </div>
@@ -473,6 +473,10 @@
             <li><strong>回馈上限</strong>：每位支持者累计回馈达赞助额10倍时停止。</li>
             <li><strong>总回馈</strong>：项目一和项目二合计回馈上限为赞助额的20倍。</li>
         </ul>
+
+        <h2>合作建议与风险观</h2>
+        <p>建议玩合约在爆仓之前拿出一小部分资金放在我这里以实现比较保险的升值。不是开玩笑，玩合约见效快，心跳也快。刀口上舔血，做到最终盈利的很少。而你我在本质上就是你出钱我出力。</p>
+        <p>不可控的风险交易，我个人是拒绝的，我宁愿一分不赚，也不会做没有把握的事。</p>
     </div>
 
     <footer>
@@ -492,7 +496,6 @@
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
 
-            // 使用 setTimeout 延迟滚动，确保布局更新
             setTimeout(() => {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
                 const targetPosition = selectedProject.getBoundingClientRect().top + window.scrollY - navHeight - 10;
@@ -501,7 +504,7 @@
                     behavior: 'smooth'
                 });
                 updateTOC();
-            }, 50); // 50ms 延迟，确保 Firefox 布局稳定
+            }, 50);
         }
 
         function updateTOC() {
