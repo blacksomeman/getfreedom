@@ -123,6 +123,7 @@
 建议玩合约在爆仓之前拿出一小部分资金放在我这里以实现比较保险的升值。不是开玩笑，玩合约见效快，心跳也快。刀口上舔血，做到最终盈利的很少。而你我在本质上就是你出钱我出力。
 
 不可控的风险交易，我个人是拒绝的，我宁愿一分不赚，也不会做没有把握的事。
+
 ---
 
 **[详情访问](https://blacksomeman.github.io/getfreedom/)**
@@ -130,9 +131,6 @@
 ## 联系方式
 - **Twitter**：[@blacksomeman](https://x.com/blacksomeman)
 - **Telegram**：[@blacksomeman](https://t.me/blacksomeman)
-
-## 最后更新
-2025年4月7日
 
 ---
 
