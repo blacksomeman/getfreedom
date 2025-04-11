@@ -379,7 +379,7 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
         .compound-calculator .display-control button.active {
             background: #f28c38;
@@ -670,13 +670,13 @@
                     <label for="principal">起始资金</label>
                     <div class="input-wrapper">
                         <span class="currency-symbol">$</span>
-                        <input type="number" id="principal" value="30000" step="any" min="0">
+                        <input type="number" id="principal" value="5000" step="any" min="0">
                     </div>
                 </div>
                 <div class="input-group">
                     <label for="dailyRate">每日收益率 (%)</label>
                     <div class="rate-wrapper">
-                        <input type="number" id="dailyRate" value="3" step="any" min="0">
+                        <input type="number" id="dailyRate" value="2.5" step="any" min="0">
                         <span class="percent-symbol">%</span>
                     </div>
                 </div>
@@ -694,9 +694,9 @@
             <div id="resultSummary" class="result-summary"></div>
             <div id="resultTable" class="result-table">
                 <div class="display-control" id="displayControl" style="display: none;">
-                    <button data-unit="days" class="active" onclick="updateTable('days')">每日</button>
-                    <button data-unit="weeks" onclick="updateTable('weeks')">每周</button>
-                    <button data-unit="months" onclick="updateTable('months')">每月</button>
+                    <button data-unit="days" class="active">每日</button>
+                    <button data-unit="weeks">每周</button>
+                    <button data-unit="months">每月</button>
                 </div>
                 <div id="tableContent"></div>
             </div>
@@ -926,6 +926,16 @@
             });
         });
 
+        // 周期选择
+        document.querySelectorAll('.display-control button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const unit = button.getAttribute('data-unit');
+                updateTable(unit);
+            });
+        });
+
         function calculateCompound() {
             principal = parseFloat(document.getElementById('principal').value);
             const dailyRate = parseFloat(document.getElementById('dailyRate').value) / 100;
@@ -968,13 +978,13 @@
 
             document.getElementById('displayControl').style.display = 'block';
             currentDisplayUnit = 'days';
-            updateDisplayControl();
+            document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.display-control button[data-unit="days"]').classList.add('active');
             updateTable(currentDisplayUnit);
         }
 
         function updateTable(unit) {
             currentDisplayUnit = unit;
-            updateDisplayControl();
 
             let tableData = [];
             if (unit === 'days') {
@@ -1066,19 +1076,9 @@
             document.getElementById('tableContent').innerHTML = tableHTML;
         }
 
-        function updateDisplayControl() {
-            const buttons = document.querySelectorAll('.display-control button');
-            buttons.forEach(button => {
-                button.classList.remove('active');
-                if (button.getAttribute('data-unit') === currentDisplayUnit) {
-                    button.classList.add('active');
-                }
-            });
-        }
-
         function resetCalculator() {
-            document.getElementById('principal').value = '30000';
-            document.getElementById('dailyRate').value = '3';
+            document.getElementById('principal').value = '5000';
+            document.getElementById('dailyRate').value = '2.5';
             document.getElementById('months').value = '5';
             document.getElementById('error').textContent = '';
             document.getElementById('resultSummary').innerHTML = '';
