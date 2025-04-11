@@ -37,7 +37,7 @@
             color: #24292e;
             font-weight: bold;
         }
-        input, select {
+        input {
             width: 100%;
             padding: 8px;
             border: 1px solid #eaecef;
@@ -69,23 +69,45 @@
         }
         .result-summary {
             background: #f6f8fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 6px;
             margin: 20px 0;
             text-align: center;
         }
         .result-summary p {
-            margin: 10px 0;
+            margin: 8px 0;
             font-size: 18px;
         }
         .result-summary .highlight {
             color: #d32f2f;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
         }
         .result-table {
             margin-top: 20px;
-            overflow-x: auto;
+        }
+        .display-control {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .display-control button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background: #f6f8fa;
+            color: #333;
+            border: 1px solid #e1e4e8;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .display-control button.active {
+            background: #f28c38;
+            color: #fff;
+            border-color: #f28c38;
+        }
+        .display-control button:hover {
+            background: #e1e4e8;
         }
         table {
             width: 100%;
@@ -93,18 +115,35 @@
             background: #fff;
             border-radius: 6px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            table-layout: fixed;
         }
         th, td {
-            padding: 12px;
-            border: 1px solid #eaecef;
+            padding: 10px;
+            border: 1px solid #e1e4e8;
             text-align: right;
+            font-size: 12px;
+            line-height: 1.8;
         }
         th {
-            background: #eaecef;
-            color: #24292e;
+            font-size: 14px;
             font-weight: bold;
+            color: #fff;
         }
-        td:first-child {
+        th:nth-child(1) {
+            background: #b3d4fc;
+            color: #333;
+            text-align: left;
+        }
+        th:nth-child(2) {
+            background: #d3d3d3;
+        }
+        th:nth-child(3) {
+            background: #f28c38;
+        }
+        th:nth-child(4) {
+            background: #28a745;
+        }
+        td:nth-child(1) {
             text-align: left;
         }
         .error {
@@ -119,20 +158,40 @@
             text-align: center;
         }
         @media (max-width: 600px) {
-            input, select {
+            input {
                 padding: 10px;
-            }
-            button {
-                width: 100%;
             }
             .button-group {
                 flex-direction: column;
+            }
+            .button-group button {
+                width: 100%;
             }
             .result-summary p {
                 font-size: 16px;
             }
             .result-summary .highlight {
                 font-size: 20px;
+            }
+            .display-control button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            th, td {
+                font-size: 11px;
+                padding: 8px;
+            }
+            th:nth-child(1), td:nth-child(1) {
+                width: 25%;
+            }
+            th:nth-child(2), td:nth-child(2) {
+                width: 25%;
+            }
+            th:nth-child(3), td:nth-child(3) {
+                width: 25%;
+            }
+            th:nth-child(4), td:nth-child(4) {
+                width: 25%;
             }
         }
     </style>
@@ -149,42 +208,35 @@
             <input type="number" id="dailyRate" value="3" step="any" min="0">
         </div>
         <div class="input-group">
-            <label for="timeUnit">时间单位</label>
-            <select id="timeUnit">
-                <option value="months">月</option>
-                <option value="weeks">周</option>
-                <option value="days">天</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label for="timeValue">时间长度</label>
-            <input type="number" id="timeValue" value="5" step="1" min="1">
-        </div>
-        <div class="input-group">
-            <label for="displayUnit">显示周期</label>
-            <select id="displayUnit">
-                <option value="days">每日</option>
-                <option value="weeks">每周</option>
-                <option value="months">每月</option>
-            </select>
+            <label for="months">月份数量</label>
+            <input type="number" id="months" value="5" step="1" min="1">
         </div>
         <div class="button-group">
             <button onclick="calculateCompound()">计算</button>
             <button class="reset" onclick="resetCalculator()">重置</button>
         </div>
         <div id="error" class="error"></div>
-        <div class="note">注：每周数据基于每 7 天末，每月数据基于每 30 天末。</div>
+        <div class="note">注：表格默认显示每日数据，可在结果上方切换周期。</div>
     </div>
     <div id="resultSummary" class="result-summary"></div>
-    <div id="resultTable" class="result-table"></div>
+    <div id="resultTable" class="result-table">
+        <div class="display-control" id="displayControl" style="display: none;">
+            <button data-unit="days" class="active" onclick="updateTable('days')">每日</button>
+            <button data-unit="weeks" onclick="updateTable('weeks')">每周</button>
+            <button data-unit="months" onclick="updateTable('months')">每月</button>
+        </div>
+        <div id="tableContent"></div>
+    </div>
 
     <script>
+        let dailyAmounts = [];
+        let principal, totalDays;
+        let currentDisplayUnit = 'days';
+
         function calculateCompound() {
-            const principal = parseFloat(document.getElementById('principal').value);
+            principal = parseFloat(document.getElementById('principal').value);
             const dailyRate = parseFloat(document.getElementById('dailyRate').value) / 100;
-            const timeUnit = document.getElementById('timeUnit').value;
-            const timeValue = parseInt(document.getElementById('timeValue').value);
-            const displayUnit = document.getElementById('displayUnit').value;
+            const months = parseInt(document.getElementById('months').value);
 
             const errorDiv = document.getElementById('error');
             if (isNaN(principal) || principal <= 0) {
@@ -195,23 +247,15 @@
                 errorDiv.textContent = '请输入有效的每日收益率（≥0%）。';
                 return;
             }
-            if (isNaN(timeValue) || timeValue < 1) {
-                errorDiv.textContent = '请输入有效的时间长度（≥1）。';
+            if (isNaN(months) || months < 1) {
+                errorDiv.textContent = '请输入有效的月份数量（≥1）。';
                 return;
             }
             errorDiv.textContent = '';
 
-            let totalDays;
-            if (timeUnit === 'months') {
-                totalDays = timeValue * 30;
-            } else if (timeUnit === 'weeks') {
-                totalDays = timeValue * 7;
-            } else {
-                totalDays = timeValue;
-            }
-
+            totalDays = months * 30;
             let finalAmount = principal;
-            const dailyAmounts = [principal];
+            dailyAmounts = [principal];
             for (let i = 1; i <= totalDays; i++) {
                 finalAmount *= (1 + dailyRate);
                 dailyAmounts.push(finalAmount);
@@ -229,21 +273,30 @@
                 <p>本金倍数: <span class="highlight">${multiple}倍</span></p>
             `;
 
+            document.getElementById('displayControl').style.display = 'block';
+            currentDisplayUnit = 'days';
+            updateDisplayControl();
+            updateTable(currentDisplayUnit);
+        }
+
+        function updateTable(unit) {
+            currentDisplayUnit = unit;
+            updateDisplayControl();
+
             let tableData = [];
-            if (displayUnit === 'days') {
+            if (unit === 'days') {
                 for (let i = 0; i <= totalDays; i++) {
                     const amount = dailyAmounts[i];
                     const periodProfit = i === 0 ? 0 : amount - dailyAmounts[i - 1];
                     const cumulativeProfit = amount - principal;
                     tableData.push({
                         period: i === 0 ? '初始' : `第 ${i} 天`,
-                        principal: dailyAmounts[i - 1] || principal,
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
                     });
                 }
-            } else if (displayUnit === 'weeks') {
+            } else if (unit === 'weeks') {
                 const step = 7;
                 for (let i = step; i <= totalDays; i += step) {
                     const amount = dailyAmounts[i];
@@ -251,7 +304,6 @@
                     const cumulativeProfit = amount - principal;
                     tableData.push({
                         period: `第 ${Math.floor(i / 7)} 周`,
-                        principal: dailyAmounts[i - step],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
@@ -265,7 +317,6 @@
                     const cumulativeProfit = amount - principal;
                     tableData.push({
                         period: `第 ${Math.ceil(totalDays / 7)} 周`,
-                        principal: dailyAmounts[lastStep],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
@@ -279,7 +330,6 @@
                     const cumulativeProfit = amount - principal;
                     tableData.push({
                         period: `第 ${Math.floor(i / 30)} 月`,
-                        principal: dailyAmounts[i - step],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
@@ -293,7 +343,6 @@
                     const cumulativeProfit = amount - principal;
                     tableData.push({
                         period: `第 ${Math.ceil(totalDays / 30)} 月`,
-                        principal: dailyAmounts[lastStep],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
@@ -305,17 +354,15 @@
                 <table>
                     <tr>
                         <th>周期</th>
-                        <th>期初本金</th>
                         <th>当期利息</th>
                         <th>累计利息</th>
-                        <th>期末总金额</th>
+                        <th>总金额</th>
                     </tr>
             `;
             tableData.forEach(row => {
                 tableHTML += `
                     <tr>
                         <td>${row.period}</td>
-                        <td>${row.principal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         <td>${row.profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         <td>${row.cumulativeProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         <td>${row.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
@@ -323,31 +370,30 @@
                 `;
             });
             tableHTML += '</table>';
-            document.getElementById('resultTable').innerHTML = tableHTML;
+            document.getElementById('tableContent').innerHTML = tableHTML;
+        }
+
+        function updateDisplayControl() {
+            const buttons = document.querySelectorAll('.display-control button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.getAttribute('data-unit') === currentDisplayUnit) {
+                    button.classList.add('active');
+                }
+            });
         }
 
         function resetCalculator() {
             document.getElementById('principal').value = '30000';
             document.getElementById('dailyRate').value = '3';
-            document.getElementById('timeUnit').value = 'months';
-            document.getElementById('timeValue').value = '5';
-            document.getElementById('displayUnit').value = 'days';
+            document.getElementById('months').value = '5';
             document.getElementById('error').textContent = '';
             document.getElementById('resultSummary').innerHTML = '';
-            document.getElementById('resultTable').innerHTML = '';
+            document.getElementById('tableContent').innerHTML = '';
+            document.getElementById('displayControl').style.display = 'none';
+            dailyAmounts = [];
+            currentDisplayUnit = 'days';
         }
-
-        document.getElementById('timeUnit').addEventListener('change', () => {
-            const timeUnit = document.getElementById('timeUnit').value;
-            const label = document.getElementById('timeValue').previousElementSibling;
-            if (timeUnit === 'months') {
-                label.textContent = '时间长度（月）';
-            } else if (timeUnit === 'weeks') {
-                label.textContent = '时间长度（周）';
-            } else {
-                label.textContent = '时间长度（天）';
-            }
-        });
     </script>
 </body>
 </html>
