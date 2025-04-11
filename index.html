@@ -3,13 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="超牛方案二：加密货币收益项目，涵盖国内OTC和海外交易，承诺20倍回馈">
-    <meta name="keywords" content="加密货币, OTC, 收付, 海外交易, 复利收益, 投资计划">
-    <meta name="author" content="blacksomeman">
-    <meta property="og:title" content="超牛方案二 - 加密货币收益项目">
-    <meta property="og:description" content="基于国内OTC和海外交易的收益计划，承诺20倍回馈！">
-    <meta property="og:image" content="./okx_wallet_qr.jpg">
-    <meta property="og:type" content="website">
     <title>加密货币收益项目</title>
     <style>
         body {
@@ -101,9 +94,6 @@
             text-align: center;
             z-index: 1000;
         }
-        .nav-links {
-            display: inline-block;
-        }
         nav a {
             margin: 0 30px;
             font-weight: bold;
@@ -119,12 +109,6 @@
         nav a.active {
             color: #24292e;
             border-bottom: 2px solid #24292e;
-        }
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #24292e;
         }
         .project {
             display: none;
@@ -163,12 +147,6 @@
             z-index: 1001;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             touch-action: pan-y;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-        #toc-menu.visible {
-            display: block;
-            opacity: 1;
         }
         #toc-menu ul {
             list-style: none;
@@ -194,66 +172,9 @@
             background: #0366d6;
             color: #fff;
         }
-        .share-section {
-            margin: 20px 0;
-        }
-        .share-btn {
-            padding: 10px 20px;
-            background: #0366d6;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-        .share-btn:hover {
-            background: #024ea4;
-        }
         @media (max-width: 600px) {
-            nav {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: #f6f8fa;
-                padding: 10px;
-                text-align: center;
-            }
-            .nav-links.active {
-                display: block;
-            }
-            .hamburger {
-                display: block;
-            }
-            nav a {
-                display: block;
-                margin: 10px 0;
-            }
             #toc-menu {
                 width: 150px;
-                top: 120px;
-            }
-            .compound-calculator input {
-                width: 100%;
-                padding: 8px;
-            }
-            .compound-calculator button {
-                padding: 12px;
-                width: 100%;
-            }
-        }
-        @media (min-width: 601px) {
-            .hamburger {
-                display: none;
-            }
-            .nav-links {
-                display: inline-block !important;
             }
         }
         .compound-calculator input {
@@ -338,11 +259,8 @@
 </head>
 <body>
     <nav>
-        <div class="hamburger" onclick="toggleNav()">☰</div>
-        <div class="nav-links">
-            <a href="#project1" class="active" onclick="showProject('project1')">项目一</a>
-            <a href="#project2" onclick="showProject('project2')">项目二</a>
-        </div>
+        <a href="#project1" class="active" onclick="showProject('project1')">项目一</a>
+        <a href="#project2" onclick="showProject('project2')">项目二</a>
     </nav>
 
     <div id="toc-icon"></div>
@@ -353,9 +271,6 @@
     <div id="project1" class="project active">
         <h2>项目一：基于在大型加密货币赌场平台上的收益</h2>
         <p>一个基于技术突破的低风险、高收益项目</p>
-        <div class="share-section">
-            <button class="share-btn" onclick="shareToX()">分享到 X</button>
-        </div>
 
         <h2>个人简述</h2>
         <p>各位推友，本人目前是国内一名外卖骑手，靠送外卖维持生计。不参与加密货币合约或其它投机交易，但不过我一直在探索用有限资金实现稳定收益。</p>
@@ -531,9 +446,6 @@
         <h2>项目二：OTC商家计划</h2>
         <p><strong>未来规划</strong>：专注做OTC，提供长期利润分成。</p>
         <p><strong>利润回馈</strong>：项目一我会回馈赞助额的10倍，项目二我会再累计回馈赞助额10倍。承诺总累计20倍回馈。</p>
-        <div class="share-section">
-            <button class="share-btn" onclick="shareToX()">分享到 X</button>
-        </div>
 
         <h2>项目阶段</h2>
         <h3>第一阶段：国内OTC</h3>
@@ -580,10 +492,6 @@
     </footer>
 
     <script>
-        function toggleNav() {
-            document.querySelector('.nav-links').classList.toggle('active');
-        }
-
         function showProject(projectId) {
             document.querySelectorAll('.project').forEach(project => {
                 project.classList.remove('active');
@@ -595,8 +503,6 @@
                 link.classList.remove('active');
             });
             document.querySelector(`nav a[href="#${projectId}"]`).classList.add('active');
-
-            document.querySelector('.nav-links').classList.remove('active'); // 收起手机端导航
 
             setTimeout(() => {
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
@@ -624,6 +530,7 @@
                 heading.id = `heading-${projectId}-${index}`;
                 tocList.appendChild(li);
             });
+            console.log(`TOC updated for ${projectId}, items: ${headings.length}`);
         }
 
         function highlightTOCItem(activeItem) {
@@ -639,6 +546,8 @@
                 const navHeight = document.querySelector('nav').offsetHeight || 60;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 10;
                 window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            } else {
+                console.error(`Target element with ID ${targetId} not found`);
             }
         }
 
@@ -667,12 +576,14 @@
                     lastActiveItem = item;
                 }
             });
+            console.log(`Dragging at Y: ${clientY}`);
         }
 
         tocIcon.addEventListener('mousedown', (e) => {
             isDragging = true;
-            tocMenu.classList.toggle('visible');
+            tocMenu.style.display = 'block';
             updateTOC();
+            console.log('Mouse down');
             e.preventDefault();
         });
 
@@ -683,17 +594,19 @@
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
-                tocMenu.classList.remove('visible');
+                tocMenu.style.display = 'none';
                 if (lastActiveItem) {
                     scrollToTarget(lastActiveItem.dataset.target);
                 }
+                console.log('Mouse up');
             }
         });
 
         tocIcon.addEventListener('touchstart', (e) => {
             isDragging = true;
-            tocMenu.classList.toggle('visible');
+            tocMenu.style.display = 'block';
             updateTOC();
+            console.log('Touch start');
             e.preventDefault();
         }, { passive: false });
 
@@ -706,10 +619,11 @@
         document.addEventListener('touchend', () => {
             if (isDragging) {
                 isDragging = false;
-                tocMenu.classList.remove('visible');
+                tocMenu.style.display = 'none';
                 if (lastActiveItem) {
                     scrollToTarget(lastActiveItem.dataset.target);
                 }
+                console.log('Touch end');
             }
         }, { passive: false });
 
@@ -771,12 +685,6 @@
                 console.error('复制失败: ', err);
                 document.getElementById('copyFeedback').textContent = '复制失败，请手动复制';
             });
-        }
-
-        function shareToX() {
-            const url = window.location.href;
-            const text = "发现一个超牛的加密货币收益项目！国内 OTC + 海外计划，20倍回馈！";
-            window.open(`https://x.com/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
         }
     </script>
 </body>
