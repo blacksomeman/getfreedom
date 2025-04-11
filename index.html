@@ -112,6 +112,12 @@
             margin-top: 10px;
             text-align: center;
         }
+        .note {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
         @media (max-width: 600px) {
             input, select {
                 padding: 10px;
@@ -167,6 +173,7 @@
             <button class="reset" onclick="resetCalculator()">重置</button>
         </div>
         <div id="error" class="error"></div>
+        <div class="note">注：每周数据基于每 7 天末，每月数据基于每 30 天末。</div>
     </div>
     <div id="resultSummary" class="result-summary"></div>
     <div id="resultTable" class="result-table"></div>
@@ -204,11 +211,9 @@
             }
 
             let finalAmount = principal;
-            const dailyAmounts = [];
-            for (let i = 0; i <= totalDays; i++) {
-                if (i > 0) {
-                    finalAmount *= (1 + dailyRate);
-                }
+            const dailyAmounts = [principal];
+            for (let i = 1; i <= totalDays; i++) {
+                finalAmount *= (1 + dailyRate);
                 dailyAmounts.push(finalAmount);
             }
 
@@ -225,15 +230,13 @@
             `;
 
             let tableData = [];
-            let step;
             if (displayUnit === 'days') {
-                step = 1;
-                for (let i = 0; i <= totalDays; i += step) {
+                for (let i = 0; i <= totalDays; i++) {
                     const amount = dailyAmounts[i];
                     const periodProfit = i === 0 ? 0 : amount - dailyAmounts[i - 1];
                     const cumulativeProfit = amount - principal;
                     tableData.push({
-                        period: `第 ${i} 天`,
+                        period: i === 0 ? '初始' : `第 ${i} 天`,
                         principal: dailyAmounts[i - 1] || principal,
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
@@ -241,28 +244,56 @@
                     });
                 }
             } else if (displayUnit === 'weeks') {
-                step = 7;
-                for (let i = 0; i <= totalDays; i += step) {
-                    const amount = dailyAmounts[Math.min(i, totalDays)];
-                    const periodProfit = i === 0 ? 0 : amount - dailyAmounts[Math.max(i - step, 0)];
+                const step = 7;
+                for (let i = step; i <= totalDays; i += step) {
+                    const amount = dailyAmounts[i];
+                    const periodProfit = amount - dailyAmounts[i - step];
                     const cumulativeProfit = amount - principal;
                     tableData.push({
-                        period: `第 ${Math.floor(i / 7) + 1} 周`,
-                        principal: dailyAmounts[Math.max(i - step, 0)] || principal,
+                        period: `第 ${Math.floor(i / 7)} 周`,
+                        principal: dailyAmounts[i - step],
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+                if (totalDays % step > 0 && totalDays >= step) {
+                    const i = totalDays;
+                    const amount = dailyAmounts[i];
+                    const lastStep = Math.floor(totalDays / step) * step;
+                    const periodProfit = amount - dailyAmounts[lastStep];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.ceil(totalDays / 7)} 周`,
+                        principal: dailyAmounts[lastStep],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
                     });
                 }
             } else {
-                step = 30;
-                for (let i = 0; i <= totalDays; i += step) {
-                    const amount = dailyAmounts[Math.min(i, totalDays)];
-                    const periodProfit = i === 0 ? 0 : amount - dailyAmounts[Math.max(i - step, 0)];
+                const step = 30;
+                for (let i = step; i <= totalDays; i += step) {
+                    const amount = dailyAmounts[i];
+                    const periodProfit = amount - dailyAmounts[i - step];
                     const cumulativeProfit = amount - principal;
                     tableData.push({
-                        period: `第 ${Math.floor(i / 30) + 1} 月`,
-                        principal: dailyAmounts[Math.max(i - step, 0)] || principal,
+                        period: `第 ${Math.floor(i / 30)} 月`,
+                        principal: dailyAmounts[i - step],
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+                if (totalDays % step > 0 && totalDays >= step) {
+                    const i = totalDays;
+                    const amount = dailyAmounts[i];
+                    const lastStep = Math.floor(totalDays / step) * step;
+                    const periodProfit = amount - dailyAmounts[lastStep];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.ceil(totalDays / 30)} 月`,
+                        principal: dailyAmounts[lastStep],
                         profit: periodProfit,
                         cumulativeProfit: cumulativeProfit,
                         total: amount
