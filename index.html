@@ -923,6 +923,8 @@
                 event.stopPropagation();
                 document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
+                // 强制触发重绘
+                button.offsetHeight;
                 selectedCurrency = button.dataset.currency;
                 document.querySelector('.currency-symbol').textContent = selectedCurrency;
                 console.log(`Currency switched to: ${selectedCurrency}`);
@@ -936,11 +938,12 @@
                 event.stopPropagation();
                 document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
+                // 强制触发重绘
+                button.offsetHeight;
                 const unit = button.getAttribute('data-unit');
+                currentDisplayUnit = unit;
                 console.log(`Switching display unit to: ${unit}`);
-                setTimeout(() => {
-                    updateTable(unit);
-                }, 0);
+                updateTable(unit);
             });
         });
 
@@ -984,16 +987,17 @@
                 <p><span class="label">本金倍数:</span> <span class="highlight">${multiple}倍</span></p>
             `;
 
-            document.getElementById('displayControl').style.display = 'block';
+            const displayControl = document.getElementById('displayControl');
+            displayControl.style.display = 'block';
             currentDisplayUnit = 'days';
             document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.display-control button[data-unit="days"]').classList.add('active');
+            const defaultButton = document.querySelector('.display-control button[data-unit="days"]');
+            defaultButton.classList.add('active');
+            defaultButton.offsetHeight; // 强制重绘
             updateTable(currentDisplayUnit);
         }
 
         function updateTable(unit) {
-            currentDisplayUnit = unit;
-
             let tableData = [];
             if (unit === 'days') {
                 for (let i = 0; i <= totalDays; i++) {
@@ -1096,7 +1100,9 @@
             dailyAmounts = [];
             currentDisplayUnit = 'days';
             document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.currency-buttons button[data-currency="$"]').classList.add('active');
+            const defaultCurrencyButton = document.querySelector('.currency-buttons button[data-currency="$"]');
+            defaultCurrencyButton.classList.add('active');
+            defaultCurrencyButton.offsetHeight; // 强制重绘
             selectedCurrency = '$';
             document.querySelector('.currency-symbol').textContent = '$';
         }
