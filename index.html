@@ -262,6 +262,9 @@
             font-size: 16px;
             transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
+        .compound-calculator .currency-buttons button:hover {
+            background: #e1e4e8;
+        }
         .compound-calculator .currency-buttons button.active {
             background: #f28c38;
             color: #fff;
@@ -381,13 +384,15 @@
             font-size: 14px;
             transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
+        .compound-calculator .display-control button:hover {
+            background: #f28c38; /* 修改为橙色，与 active 一致 */
+            color: #fff; /* 同步文字颜色 */
+            border-color: #f28c38; /* 同步边框颜色 */
+        }
         .compound-calculator .display-control button.active {
             background: #f28c38;
             color: #fff;
             border-color: #f28c38;
-        }
-        .compound-calculator .display-control button:hover {
-            background: #e1e4e8;
         }
         .compound-calculator table {
             width: 100%;
@@ -923,8 +928,6 @@
                 event.stopPropagation();
                 document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                // 强制触发重绘
-                button.offsetHeight;
                 selectedCurrency = button.dataset.currency;
                 document.querySelector('.currency-symbol').textContent = selectedCurrency;
                 console.log(`Currency switched to: ${selectedCurrency}`);
@@ -938,12 +941,15 @@
                 event.stopPropagation();
                 document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                // 强制触发重绘
-                button.offsetHeight;
+                // 强制触发样式计算
+                window.getComputedStyle(button).backgroundColor;
                 const unit = button.getAttribute('data-unit');
                 currentDisplayUnit = unit;
                 console.log(`Switching display unit to: ${unit}`);
-                updateTable(unit);
+                // 使用 requestAnimationFrame 延迟 DOM 更新
+                requestAnimationFrame(() => {
+                    updateTable(unit);
+                });
             });
         });
 
@@ -993,7 +999,7 @@
             document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
             const defaultButton = document.querySelector('.display-control button[data-unit="days"]');
             defaultButton.classList.add('active');
-            defaultButton.offsetHeight; // 强制重绘
+            window.getComputedStyle(defaultButton).backgroundColor; // 强制样式计算
             updateTable(currentDisplayUnit);
         }
 
@@ -1065,27 +1071,35 @@
                 }
             }
 
-            let tableHTML = `
-                <table>
-                    <tr>
-                        <th>周期</th>
-                        <th>当期利息</th>
-                        <th>累计利息</th>
-                        <th>总金额</th>
-                    </tr>
-            `;
-            tableData.forEach(row => {
-                tableHTML += `
-                    <tr>
-                        <td>${row.period}</td>
-                        <td>${row.profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                        <td>${row.cumulativeProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                        <td>${row.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    </tr>
-                `;
+            // 创建新的表格元素
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            ['周期', '当期利息', '累计利息', '总金额'].forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
             });
-            tableHTML += '</table>';
-            document.getElementById('tableContent').innerHTML = tableHTML;
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                [row.period, 
+                 row.profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
+                 row.cumulativeProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
+                 row.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})].forEach(cellText => {
+                    const td = document.createElement('td');
+                    td.textContent = cellText;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+
+            const tableContent = document.getElementById('tableContent');
+            tableContent.replaceChildren(table); // 更高效的 DOM 更新
             console.log(`Table updated for unit: ${unit}`);
         }
 
@@ -1095,14 +1109,13 @@
             document.getElementById('months').value = '5';
             document.getElementById('error').textContent = '';
             document.getElementById('resultSummary').innerHTML = '';
-            document.getElementById('tableContent').innerHTML = '';
+            document.getElementById('tableContent').replaceChildren();
             document.getElementById('displayControl').style.display = 'none';
             dailyAmounts = [];
             currentDisplayUnit = 'days';
             document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
             const defaultCurrencyButton = document.querySelector('.currency-buttons button[data-currency="$"]');
             defaultCurrencyButton.classList.add('active');
-            defaultCurrencyButton.offsetHeight; // 强制重绘
             selectedCurrency = '$';
             document.querySelector('.currency-symbol').textContent = '$';
         }
