@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加密货币收益项目</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #333;
+            font-weight: normal;
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* 计算器样式 */
+        .compound-calculator label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .compound-calculator .currency-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .compound-calculator .currency-buttons button {
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #333;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .compound-calculator .currency-buttons button.active {
+            text-decoration: underline;
+        }
+        .compound-calculator input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #333;
+            font-size: 16px;
+        }
+        .compound-calculator .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .compound-calculator .input-wrapper .currency-symbol {
+            position: absolute;
+            left: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+        .compound-calculator .input-wrapper input {
+            padding-left: 30px;
+        }
+        .compound-calculator .rate-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .compound-calculator .rate-wrapper .percent-symbol {
+            position: absolute;
+            right: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+        .compound-calculator .rate-wrapper input {
+            padding-right: 30px;
+        }
+        .compound-calculator .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .compound-calculator button {
+            padding: 10px 20px;
+            background: none;
+            border: 1px solid #333;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .compound-calculator .result-summary p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .compound-calculator .display-control {
+            margin-bottom: 10px;
+        }
+        .compound-calculator .display-control button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background: none;
+            border: 1px solid #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .compound-calculator .display-control button.active {
+            text-decoration: underline;
+        }
+        .compound-calculator table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .compound-calculator th, .compound-calculator td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: right;
+            font-size: 12px;
+        }
+        .compound-calculator th {
+            font-size: 14px;
+            font-weight: normal;
+            text-decoration: underline;
+        }
+        .compound-calculator td:nth-child(1) {
+            text-align: left;
+        }
+        .compound-calculator .error {
+            color: #d32f2f;
+            margin-top: 10px;
+        }
+        .compound-calculator .note {
+            color: #333;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        @media (max-width: 600px) {
+            .compound-calculator input {
+                padding: 10px;
+            }
+            .compound-calculator .button-group {
+                flex-direction: column;
+            }
+            .compound-calculator .button-group button {
+                width: 100%;
+            }
+            .compound-calculator th, .compound-calculator td {
+                font-size: 11px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>我的加密货币收益项目</h1>
+    <p>一个基于技术突破的低风险、高收益项目</p>
+
+    <h2>项目详情</h2>
+    <ol>
+        <li><u>我的背景</u>: 我是一名外卖骑手，大学学的是计算机网络与信息安全，现在用技术实现稳定收益。</li>
+        <li><u>项目核心</u>: 在一个大型加密货币赌场平台上，通过多窗口技术（3000+窗口）和马丁格尔策略，实现低风险高收益。</li>
+        <li><u>收益效果</u>: 日收益率2%-3%，5个月后本金可达40倍。</li>
+        <li><u>风险控制</u>: 测试一年多，风险概率十亿分之一，通过海量窗口和低起始押注实现。</li>
+        <li><u>资金需求</u>: 需要5000 USDT启动，承诺每支持1 USDT，奉还10 USDT（10倍回报）。</li>
+        <li><u>资金透明</u>: 所有资金记录在Google表格中，<a href="https://docs.google.com/spreadsheets/d/1LkvwOum6_SeDzuEZRoUz7QCWjHerMaS2uSm5ufn9lCk">点击查看</a>。</li>
+        <li><u>钱包地址</u>: TRON链地址 TQchBHjbjmHDc8yjXTXTzqjANFKWcX3RXN（请勿转错）。</li>
+    </ol>
+
+    <h2>日复利计算器</h2>
+    <div class="compound-calculator">
+        <div>
+            <div>
+                <label>货币:</label>
+                <div class="currency-buttons">
+                    <button data-currency="$" class="active">$</button>
+                    <button data-currency="€">€</button>
+                    <button data-currency="£">£</button>
+                    <button data-currency="¥">¥</button>
+                </div>
+            </div>
+            <div>
+                <label for="principal">起始资金</label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="principal" value="5000" step="any" min="0">
+                </div>
+            </div>
+            <div>
+                <label for="dailyRate">每日收益率 (%)</label>
+                <div class="rate-wrapper">
+                    <input type="number" id="dailyRate" value="2.5" step="any" min="0">
+                    <span class="percent-symbol">%</span>
+                </div>
+            </div>
+            <div>
+                <label for="months">月份数量</label>
+                <input type="number" id="months" value="5" step="1" min="1">
+            </div>
+            <div class="button-group">
+                <button onclick="calculateCompound()">计算</button>
+                <button onclick="resetCalculator()">重置</button>
+            </div>
+            <div id="error" class="error"></div>
+            <div class="note">注：表格默认显示每日数据，可在结果上方切换周期。</div>
+        </div>
+        <div id="resultSummary"></div>
+        <div id="resultTable">
+            <div class="display-control" id="displayControl" style="display: none;">
+                <button data-unit="days" class="active">每日</button>
+                <button data-unit="weeks">每周</button>
+                <button data-unit="months">每月</button>
+            </div>
+            <div id="tableContent"></div>
+        </div>
+    </div>
+
+    <h2>联系方式</h2>
+    <ol>
+        <li>Twitter: <a href="https://x.com/blacksomeman">@blacksomeman</a></li>
+        <li>Telegram: <a href="https://t.me/blacksomeman">@blacksomeman</a></li>
+    </ol>
+
+    <script>
+        let dailyAmounts = [];
+        let principal, totalDays;
+        let currentDisplayUnit = 'days';
+        let selectedCurrency = '$';
+
+        document.querySelectorAll('.currency-buttons button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                selectedCurrency = button.dataset.currency;
+                document.querySelector('.currency-symbol').textContent = selectedCurrency;
+            });
+        });
+
+        document.querySelectorAll('.display-control button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                window.getComputedStyle(button).backgroundColor;
+                const unit = button.getAttribute('data-unit');
+                currentDisplayUnit = unit;
+                requestAnimationFrame(() => {
+                    updateTable(unit);
+                });
+            });
+        });
+
+        function calculateCompound() {
+            principal = parseFloat(document.getElementById('principal').value);
+            const dailyRate = parseFloat(document.getElementById('dailyRate').value) / 100;
+            const months = parseInt(document.getElementById('months').value);
+
+            const errorDiv = document.getElementById('error');
+            if (isNaN(principal) || principal <= 0) {
+                errorDiv.textContent = '请输入有效的起始资金（>0）。';
+                return;
+            }
+            if (isNaN(dailyRate) || dailyRate < 0) {
+                errorDiv.textContent = '请输入有效的每日收益率（≥0%）。';
+                return;
+            }
+            if (isNaN(months) || months < 1) {
+                errorDiv.textContent = '请输入有效的月份数量（≥1）。';
+                return;
+            }
+            errorDiv.textContent = '';
+
+            totalDays = months * 30;
+            let finalAmount = principal;
+            dailyAmounts = [principal];
+            for (let i = 1; i <= totalDays; i++) {
+                finalAmount *= (1 + dailyRate);
+                dailyAmounts.push(finalAmount);
+            }
+
+            const profit = finalAmount - principal;
+            const profitPercentage = (profit / principal * 100).toFixed(2);
+            const multiple = (finalAmount / principal).toFixed(2);
+
+            document.getElementById('resultSummary').innerHTML = `
+                <ol>
+                    <li>起始资金: ${selectedCurrency}${principal.toLocaleString()}</li>
+                    <li>最终金额: ${selectedCurrency}${finalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>总利润: ${selectedCurrency}${profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>
+                    <li>总收益率: ${profitPercentage}%</li>
+                    <li>本金倍数: ${multiple}倍</li>
+                </ol>
+            `;
+
+            const displayControl = document.getElementById('displayControl');
+            displayControl.style.display = 'block';
+            currentDisplayUnit = 'days';
+            document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
+            const defaultButton = document.querySelector('.display-control button[data-unit="days"]');
+            defaultButton.classList.add('active');
+            window.getComputedStyle(defaultButton).backgroundColor;
+            updateTable(currentDisplayUnit);
+        }
+
+        function updateTable(unit) {
+            let tableData = [];
+            if (unit === 'days') {
+                for (let i = 0; i <= totalDays; i++) {
+                    const amount = dailyAmounts[i];
+                    const periodProfit = i === 0 ? 0 : amount - dailyAmounts[i - 1];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: i === 0 ? '初始' : `第 ${i} 天`,
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+            } else if (unit === 'weeks') {
+                const step = 7;
+                for (let i = step; i <= totalDays; i += step) {
+                    const amount = dailyAmounts[i];
+                    const periodProfit = amount - dailyAmounts[i - step];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.floor(i / 7)} 周`,
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+                if (totalDays % step > 0 && totalDays >= step) {
+                    const i = totalDays;
+                    const amount = dailyAmounts[i];
+                    const lastStep = Math.floor(totalDays / step) * step;
+                    const periodProfit = amount - dailyAmounts[lastStep];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.ceil(totalDays / 7)} 周`,
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+            } else {
+                const step = 30;
+                for (let i = step; i <= totalDays; i += step) {
+                    const amount = dailyAmounts[i];
+                    const periodProfit = amount - dailyAmounts[i - step];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.floor(i / 30)} 月`,
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+                if (totalDays % step > 0 && totalDays >= step) {
+                    const i = totalDays;
+                    const amount = dailyAmounts[i];
+                    const lastStep = Math.floor(totalDays / step) * step;
+                    const periodProfit = amount - dailyAmounts[lastStep];
+                    const cumulativeProfit = amount - principal;
+                    tableData.push({
+                        period: `第 ${Math.ceil(totalDays / 30)} 月`,
+                        profit: periodProfit,
+                        cumulativeProfit: cumulativeProfit,
+                        total: amount
+                    });
+                }
+            }
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            ['周期', '当期利息', '累计利息', '总金额'].forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                [row.period, 
+                 row.profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
+                 row.cumulativeProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}), 
+                 row.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})].forEach(cellText => {
+                    const td = document.createElement('td');
+                    td.textContent = cellText;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+
+            const tableContent = document.getElementById('tableContent');
+            tableContent.replaceChildren(table);
+        }
+
+        function resetCalculator() {
+            document.getElementById('principal').value = '5000';
+            document.getElementById('dailyRate').value = '2.5';
+            document.getElementById('months').value = '5';
+            document.getElementById('error').textContent = '';
+            document.getElementById('resultSummary').innerHTML = '';
+            document.getElementById('tableContent').replaceChildren();
+            document.getElementById('displayControl').style.display = 'none';
+            dailyAmounts = [];
+            currentDisplayUnit = 'days';
+            document.querySelectorAll('.currency-buttons button').forEach(btn => btn.classList.remove('active'));
+            const defaultCurrencyButton = document.querySelector('.currency-buttons button[data-currency="$"]');
+            defaultCurrencyButton.classList.add('active');
+            selectedCurrency = '$';
+            document.querySelector('.currency-symbol').textContent = '$';
+        }
+    </script>
+</body>
+</html>
