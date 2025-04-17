@@ -224,28 +224,13 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        /* 计算器样式 */
-        .compound-calculator {
-            background: #f5f5f5;
-        }
         .compound-calculator h2 {
-            text-align: center;
-        }
-        .compound-calculator .calculator-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .compound-calculator .input-group {
-            margin: 15px 0;
+            text-align: left;
         }
         .compound-calculator label {
             display: block;
             margin-bottom: 5px;
             color: #24292e;
-            font-weight: bold;
         }
         .compound-calculator .currency-buttons {
             display: flex;
@@ -253,22 +238,33 @@
             margin-bottom: 10px;
         }
         .compound-calculator .currency-buttons button {
-            flex: 1;
             padding: 8px 12px;
-            background: #e0e0e0;
-            border: 1px solid #ccc;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            transition: background 0.2s ease;
         }
         .compound-calculator .currency-buttons button:hover {
             background: #e1e4e8;
         }
         .compound-calculator .currency-buttons button.active {
-            background: #f28c38;
+            background: #ff6f00;
             color: #fff;
-            border-color: #f28c38;
+            border-color: #ff6f00;
+        }
+        .compound-calculator input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e1e4e8;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+        .compound-calculator input:focus {
+            border-color: #0366d6;
+            outline: none;
         }
         .compound-calculator .input-wrapper {
             position: relative;
@@ -279,13 +275,6 @@
             position: absolute;
             left: 10px;
             color: #666;
-            font-size: 16px;
-        }
-        .compound-calculator input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #eaecef;
-            border-radius: 4px;
             font-size: 16px;
         }
         .compound-calculator .input-wrapper input {
@@ -315,118 +304,71 @@
             background: #0366d6;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background 0.2s ease;
         }
         .compound-calculator button:hover {
             background: #024ea4;
         }
-        .compound-calculator button.reset {
-            background: #666;
+        .compound-calculator button:nth-child(2) {
+            background: #6a737d;
         }
-        .compound-calculator button.reset:hover {
-            background: #555;
+        .compound-calculator button:nth-child(2):hover {
+            background: #5a626b;
         }
         .compound-calculator .result-summary {
-            background: #fff;
+            margin-top: 20px;
             padding: 15px;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
             border-radius: 6px;
-            margin: 20px 0;
-            text-align: left;
         }
         .compound-calculator .result-summary p {
             margin: 8px 0;
             font-size: 16px;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .compound-calculator .result-summary .label {
-            font-weight: 600;
-            color: #24292e;
-            background: #f6f8fa;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border-left: 3px solid #0366d6;
-            display: inline-block;
-        }
-        .compound-calculator .result-summary .highlight {
-            color: #28a745;
-            font-size: 24px;
-            font-weight: bold;
-            background: none;
-            padding: 0;
-        }
-        .compound-calculator .result-summary p:nth-child(2) .highlight,
-        .compound-calculator .result-summary p:nth-child(3) .highlight {
-            color: #28a745;
-        }
-        .compound-calculator .result-summary p:nth-child(4) .highlight {
-            color: #f28c38;
-        }
-        .compound-calculator .result-table {
-            margin-top: 20px;
         }
         .compound-calculator .display-control {
             margin-bottom: 10px;
-            text-align: center;
         }
         .compound-calculator .display-control button {
             padding: 8px 16px;
             margin: 0 5px;
             background: #f6f8fa;
-            color: #333;
             border: 1px solid #e1e4e8;
-            border-radius: 20px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            transition: background 0.2s ease;
         }
         .compound-calculator .display-control button:hover {
-            background: #f28c38;
-            color: #fff;
-            border-color: #f28c38;
+            background: #e1e4e8;
         }
         .compound-calculator .display-control button.active {
-            background: #f28c38;
+            background: #ff6f00;
             color: #fff;
-            border-color: #f28c38;
+            border-color: #ff6f00;
         }
         .compound-calculator table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
             background: #fff;
+            border: 1px solid #e1e4e8;
             border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            table-layout: fixed;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .compound-calculator th, .compound-calculator td {
             padding: 10px;
             border: 1px solid #e1e4e8;
             text-align: right;
             font-size: 12px;
-            line-height: 1.8;
         }
         .compound-calculator th {
+            background: #f6f8fa;
             font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .compound-calculator th:nth-child(1) {
-            background: #b3d4fc;
-            color: #333;
-            text-align: left;
-        }
-        .compound-calculator th:nth-child(2) {
-            background: #d3d3d3;
-        }
-        .compound-calculator th:nth-child(3) {
-            background: #f28c38;
-        }
-        .compound-calculator th:nth-child(4) {
-            background: #28a745;
+            color: #24292e;
         }
         .compound-calculator td:nth-child(1) {
             text-align: left;
@@ -434,23 +376,13 @@
         .compound-calculator .error {
             color: #d32f2f;
             margin-top: 10px;
-            text-align: center;
         }
         .compound-calculator .note {
             color: #666;
             font-size: 0.9em;
             margin-top: 10px;
-            text-align: center;
         }
         @media (max-width: 600px) {
-            .compound-calculator .currency-buttons {
-                flex-wrap: wrap;
-            }
-            .compound-calculator .currency-buttons button {
-                padding: 10px;
-                font-size: 14px;
-                min-width: 0;
-            }
             .compound-calculator input {
                 padding: 10px;
             }
@@ -460,35 +392,9 @@
             .compound-calculator .button-group button {
                 width: 100%;
             }
-            .compound-calculator .result-summary p {
-                font-size: 14px;
-            }
-            .compound-calculator .result-summary .label {
-                font-size: 14px;
-                padding: 3px 6px;
-            }
-            .compound-calculator .result-summary .highlight {
-                font-size: 20px;
-            }
-            .compound-calculator .display-control button {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
             .compound-calculator th, .compound-calculator td {
                 font-size: 11px;
                 padding: 8px;
-            }
-            .compound-calculator th:nth-child(1), .compound-calculator td:nth-child(1) {
-                width: 25%;
-            }
-            .compound-calculator th:nth-child(2), .compound-calculator td:nth-child(2) {
-                width: 25%;
-            }
-            .compound-calculator th:nth-child(3), .compound-calculator td:nth-child(3) {
-                width: 25%;
-            }
-            .compound-calculator th:nth-child(4), .compound-calculator td:nth-child(4) {
-                width: 25%;
             }
         }
     </style>
@@ -513,7 +419,7 @@
 
         <h2>项目背景</h2>
         <ul>
-            <li><strong>平台</strong>：一家规模很大有一定知名度的加密货币在线博彩平台，公平、且安全。</li>
+            <li><strong>操作平台</strong>：在一家规模很大有一定知名度的加密货币在线博彩平台上，公平、且安全。</li>
             <li><strong>具体项目</strong>：dice骰子投注</li>
             <li><strong>研究时间</strong>：测试和规划超过一年。</li>
             <li><strong>核心问题</strong>：平台靠概率优势和赌徒心理让普通玩家难以盈利，除非拥有天量本金。</li>
@@ -657,11 +563,10 @@
             </table>
         </div>
 
-        <!-- 日复利计算器 -->
         <div class="compound-calculator">
             <h2>日复利计算器</h2>
-            <div class="calculator-container">
-                <div class="input-group">
+            <div>
+                <div>
                     <label>货币:</label>
                     <div class="currency-buttons">
                         <button data-currency="$" class="active">$</button>
@@ -670,33 +575,33 @@
                         <button data-currency="¥">¥</button>
                     </div>
                 </div>
-                <div class="input-group">
+                <div>
                     <label for="principal">起始资金</label>
                     <div class="input-wrapper">
                         <span class="currency-symbol">$</span>
                         <input type="number" id="principal" value="5000" step="any" min="0">
                     </div>
                 </div>
-                <div class="input-group">
+                <div>
                     <label for="dailyRate">每日收益率 (%)</label>
                     <div class="rate-wrapper">
                         <input type="number" id="dailyRate" value="2.5" step="any" min="0">
                         <span class="percent-symbol">%</span>
                     </div>
                 </div>
-                <div class="input-group">
+                <div>
                     <label for="months">月份数量</label>
                     <input type="number" id="months" value="5" step="1" min="1">
                 </div>
                 <div class="button-group">
                     <button onclick="calculateCompound()">计算</button>
-                    <button class="reset" onclick="resetCalculator()">重置</button>
+                    <button onclick="resetCalculator()">重置</button>
                 </div>
                 <div id="error" class="error"></div>
                 <div class="note">注：表格默认显示每日数据，可在结果上方切换周期。</div>
             </div>
             <div id="resultSummary" class="result-summary"></div>
-            <div id="resultTable" class="result-table">
+            <div id="resultTable">
                 <div class="display-control" id="displayControl" style="display: none;">
                     <button data-unit="days" class="active">每日</button>
                     <button data-unit="weeks">每周</button>
@@ -914,13 +819,11 @@
             });
         }
 
-        // 计算器脚本
         let dailyAmounts = [];
         let principal, totalDays;
         let currentDisplayUnit = 'days';
         let selectedCurrency = '$';
 
-        // 货币选择
         document.querySelectorAll('.currency-buttons button').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -933,19 +836,16 @@
             });
         });
 
-        // 周期选择
         document.querySelectorAll('.display-control button').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                // 强制触发样式计算
                 window.getComputedStyle(button).backgroundColor;
                 const unit = button.getAttribute('data-unit');
                 currentDisplayUnit = unit;
                 console.log(`Switching display unit to: ${unit}`);
-                // 使用 requestAnimationFrame 延迟 DOM 更新
                 requestAnimationFrame(() => {
                     updateTable(unit);
                 });
@@ -985,11 +885,11 @@
             const multiple = (finalAmount / principal).toFixed(2);
 
             document.getElementById('resultSummary').innerHTML = `
-                <p><span class="label">起始资金:</span> <span class="highlight">${selectedCurrency}${principal.toLocaleString()}</span></p>
-                <p><span class="label">最终金额:</span> <span class="highlight">${selectedCurrency}${finalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></p>
-                <p><span class="label">总利润:</span> <span class="highlight">${selectedCurrency}${profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></p>
-                <p><span class="label">总收益率:</span> <span class="highlight">${profitPercentage}%</span></p>
-                <p><span class="label">本金倍数:</span> <span class="highlight">${multiple}倍</span></p>
+                <p>起始资金: ${selectedCurrency}${principal.toLocaleString()}</p>
+                <p>最终金额: ${selectedCurrency}${finalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                <p>总利润: ${selectedCurrency}${profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                <p>总收益率: ${profitPercentage}%</p>
+                <p>本金倍数: ${multiple}倍</p>
             `;
 
             const displayControl = document.getElementById('displayControl');
@@ -998,7 +898,7 @@
             document.querySelectorAll('.display-control button').forEach(btn => btn.classList.remove('active'));
             const defaultButton = document.querySelector('.display-control button[data-unit="days"]');
             defaultButton.classList.add('active');
-            window.getComputedStyle(defaultButton).backgroundColor; // 强制样式计算
+            window.getComputedStyle(defaultButton).backgroundColor;
             updateTable(currentDisplayUnit);
         }
 
@@ -1070,7 +970,6 @@
                 }
             }
 
-            // 创建新的表格元素
             const table = document.createElement('table');
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
@@ -1098,7 +997,7 @@
             table.appendChild(tbody);
 
             const tableContent = document.getElementById('tableContent');
-            tableContent.replaceChildren(table); // 更高效的 DOM 更新
+            tableContent.replaceChildren(table);
             console.log(`Table updated for unit: ${unit}`);
         }
 
